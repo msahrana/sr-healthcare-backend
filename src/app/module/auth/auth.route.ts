@@ -25,5 +25,6 @@ router.post(
 	auth(Role.ADMIN, Role.DOCTOR, Role.PATIENT, Role.SUPER_ADMIN),
 	AuthController.changePassword,
 );
+router.post("/google", AuthController.googleLogin);
 
 export const AuthRoutes = router;

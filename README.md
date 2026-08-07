@@ -1,257 +1,591 @@
-# PH Healthcare System — Backend
+# 🏥 PH Healthcare System Backend
 
-REST API for a doctor-appointment platform: patients book consultations, doctors run them, admins manage the platform. This repo is the backend only.
+# 🏥 Live URL
 
-**Stack:** Node.js · Express 5 · TypeScript · Prisma 7 · PostgreSQL · JWT auth
+------------link here
 
-## Where the project stands today
+A scalable healthcare platform that connects **Patients** and **Doctors** through secure online consultations. Patients can search for doctors, book appointments, make online payments, attend video consultations, and receive digital prescriptions. Administrators manage users, approve doctors, and maintain the overall platform.
 
-This is an early build, not the finished product. Right now the only working feature is authentication — a patient can register, log in, and fetch their own profile. Appointments, doctor schedules, payments, and everything else in [`Project Requirements.md`](./Project%20Requirements.md) is planned but not built yet.
+---
 
-Treat this README as a description of what the code *actually does today*, including its rough edges. A few are called out directly in [Known limitations](#known-limitations) further down — read that section before assuming something is broken on your end.
+# Table of Contents
 
-## Prerequisites
+- Overview
+- Features
+- User Roles
+- Authentication & Authorization
+- Account Management
+- Doctor Application Workflow
+- Doctor Schedule Management
+- Appointment Booking
+- Appointment Lifecycle
+- Prescription Management
+- Cancellation & Refund Policy
+- Email Notifications
+- Business Rules
+- Conceptual Data Models
+- Future Scope
 
-| Tool           | Version | Check with |
-| -------------- | ------- | ---------- |
-| **Node.js**    | 20+     | `node -v`  |
-| **PostgreSQL** | 14+     | `psql -V`  |
+---
 
-Any package manager works (npm, pnpm, yarn, bun). The examples below use `npm`.
+# Overview
 
-## Getting started
+PH Healthcare System is a role-based healthcare platform designed for online medical consultation.
 
-**1. Install dependencies**
+The platform enables:
 
-```bash
-npm install
+- Patients to register, search doctors, book appointments, pay online, attend consultations, and receive prescriptions.
+- Doctors to publish schedules, manage appointments, conduct consultations, and issue digital prescriptions.
+- Admins to manage doctors and patients.
+- Super Admins to manage the entire platform, including other administrators.
+
+The backend is designed using a modular architecture with clear separation of authentication, appointment management, scheduling, payments, and administration.
+
+---
+
+# Features
+
+## Authentication
+
+- Email & Password Login
+- Google Login (Patients Only)
+- JWT Authentication
+- Access Token
+- Refresh Token
+- Cookie-based Authentication
+- Email OTP Verification
+- Forgot Password
+- Reset Password
+- Change Password
+- Set Password (Google Patients)
+
+---
+
+## Patient Features
+
+- Register using Email
+- Register using Google
+- Update Profile
+- Browse Today's Available Doctors
+- Book Appointment
+- Online Payment
+- Download Invoice
+- Join Video Consultation
+- Cancel Appointment
+- Receive Refund (when eligible)
+- Receive Prescription PDF
+
+---
+
+## Doctor Features
+
+- Apply as Doctor
+- Email OTP Verification
+- Wait for Approval
+- Login after Approval
+- Manage Profile
+- Create Schedule
+- Publish Schedule
+- Edit Schedule
+- View Bookings
+- Start Consultation
+- Complete Consultation
+- Generate Prescription
+
+---
+
+## Admin Features
+
+- Doctor Approval
+- Doctor Rejection
+- Block Doctor
+- Unblock Doctor
+- Block Patient
+- Unblock Patient
+- Create Admin
+- Dashboard & Monitoring
+
+---
+
+## Super Admin Features
+
+Everything an Admin can do, plus:
+
+- Create Super Admin
+- Block Admin
+- Unblock Admin
+- Block Super Admin
+- Unblock Super Admin
+
+---
+
+# User Roles
+
+There are four system roles.
+
+| Role        | Registration                 | Login                   |
+| ----------- | ---------------------------- | ----------------------- |
+| Patient     | Self Registration            | Email/Password & Google |
+| Doctor      | Doctor Application           | Email/Password          |
+| Admin       | Created by Admin/Super Admin | Email/Password          |
+| Super Admin | Created by Super Admin       | Email/Password          |
+
+---
+
+# Authentication & Authorization
+
+## Patient
+
+Supports:
+
+- Email Registration
+- Google Registration
+- Email Login
+- Google Login
+
+Google and Email accounts sharing the same email address are treated as one account.
+
+---
+
+## Doctor
+
+- Email Registration
+- OTP Verification
+- Requires Admin Approval
+- Email Login Only
+
+---
+
+## Admin
+
+- Created internally
+- Email Login Only
+
+---
+
+## Super Admin
+
+- Created internally
+- Email Login Only
+
+---
+
+# Account Management
+
+## Email Verification
+
+OTP verification is required for:
+
+- Patient Registration
+- Doctor Application
+
+OTP verification is NOT required for:
+
+- Google Registration
+- Admin Creation
+- Super Admin Creation
+
+---
+
+## Password Management
+
+Supported features:
+
+- Forgot Password
+- Reset Password
+- Change Password
+- Set Password (Google Patients)
+
+---
+
+## Session Management
+
+Every successful authentication returns:
+
+- Access Token
+- Refresh Token
+
+Both are stored securely in HTTP-only cookies.
+
+---
+
+# Doctor Application Workflow
+
+```
+Apply
+      │
+      ▼
+OTP Verification
+      │
+      ▼
+Pending Review
+      │
+      ├────────► Rejected
+      │
+      ▼
+Approved
+      │
+      ▼
+Doctor Account Activated
+      │
+      ▼
+Welcome Email
+      │
+      ▼
+Doctor Login
 ```
 
-**2. Set up your environment file**
+Only approved doctors can access the platform.
 
-```bash
-cp .env.example .env
-```
+---
 
-Open `.env` and point `DATABASE_URL` at a Postgres database you can connect to:
+# Doctor Schedule Management
 
-```
-DATABASE_URL="postgresql://YOUR_USERNAME:YOUR_PASSWORD@localhost:5432/ph_healthcare?schema=public"
-```
+Each doctor can publish daily schedules.
 
-The database doesn't need to exist beforehand — `prisma migrate dev` creates it. The other variables in `.env.example` are fine to leave as-is for local development; see [Environment variables](#environment-variables) for what each one does.
+## Schedule Rules
 
-**3. Generate the Prisma client**
+- One schedule per doctor per calendar day
+- Minimum duration: **3 hours**
+- Maximum duration: **8 hours**
+- Must remain within the same calendar day
+- Doctor provides one Meet/Zoom/Video Call link
+- Starts as Draft
+- Must be Published before patients can view it
 
-```bash
-npx prisma generate
-```
+---
 
-Prisma writes a typed client into `src/generated/prisma`. That folder is git-ignored, so a fresh clone never has it, and almost every file under `src/` imports from it — skip this step and nothing compiles. Re-run it any time you change a file in `prisma/schema/`.
+## Slot Generation
 
-**4. Run the migrations**
-
-```bash
-npx prisma migrate dev
-```
-
-This creates the `user` and `patient` tables using the SQL already committed under `prisma/migrations/`.
-
-**5. Start the server**
-
-```bash
-npm run dev
-```
-
-You should see:
+Slots are automatically generated.
 
 ```
-Connected to the database successfully.
-Server is running on port 5000
+Slot Length = 20 Minutes
 ```
 
-Confirm it's up:
-
-```bash
-curl http://localhost:5000/
-# {"success":true,"message":"Welcome to PH Healthcare System Backend"}
-```
-
-## Environment variables
-
-`src/app/config/index.ts` is the only place `process.env` is read — application code should import `config` from there rather than reaching for `process.env` directly.
-
-| Variable                  | What it's for                                                      |
-| -------------------------- | ------------------------------------------------------------------ |
-| `NODE_ENV`                 | `development` includes the raw error and stack trace in API error responses |
-| `PORT`                     | Port the HTTP server listens on                                    |
-| `DATABASE_URL`             | Postgres connection string, used by both Prisma and the app        |
-| `JWT_ACCESS_SECRET`        | Signing key for access tokens                                      |
-| `JWT_REFRESH_SECRET`       | Signing key for refresh tokens                                     |
-| `JWT_ACCESS_EXPIRES_IN`    | Access token lifetime (e.g. `15m`, `1d`)                            |
-| `JWT_REFRESH_EXPIRES_IN`   | Refresh token lifetime                                              |
-| `BCRYPT_SALT_ROUNDS`       | Read into config but not wired up yet — password hashing currently uses a hardcoded value (see below) |
-| `BACKEND_URL`              | Read into config but not used anywhere yet                          |
-| `FRONTEND_URL`             | Added to the CORS allowlist                                        |
-
-There's no validation on startup: if a variable is missing, `config` simply holds `undefined` for it, and the app boots anyway. The first sign of trouble is usually a runtime error the moment that value is actually used — for `JWT_ACCESS_SECRET`, that means the very first login or registration.
-
-Before deploying anywhere, replace the JWT secrets — the ones in `.env.example` are placeholders anyone can guess:
-
-```bash
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
-## Project structure
+Example
 
 ```
-src/
-├── server.ts                       # connects to the DB, then starts listening
-├── app.ts                          # express app: cors, body parsing, routes, error handling
-├── generated/prisma/                # Prisma client — git-ignored, run `npx prisma generate`
-└── app/
-    ├── config/index.ts              # reads and exposes every environment variable
-    ├── lib/prisma.ts                # shared PrismaClient instance — always import this, don't `new` your own
-    ├── middleware/
-    │   ├── checkAuth.ts             # exports `auth(...roles)`, the JWT + role guard
-    │   ├── globalErrorHandler.ts    # turns thrown errors into JSON responses
-    │   └── notFound.ts              # catch-all for unmatched routes
-    ├── utils/
-    │   ├── catchAsync.ts            # wraps async route handlers so thrown errors reach the error handler
-    │   ├── jwt.ts                   # sign / verify helpers
-    │   └── sendResponse.ts          # the standard `{ success, statusCode, message, data }` envelope
-    └── module/
-        └── auth/                    # the one feature module that exists so far
-            ├── auth.route.ts
-            ├── auth.controller.ts
-            ├── auth.service.ts
-            └── auth.interface.ts
+3 PM → 9 PM
 
-prisma/
-├── schema/
-│   ├── schema.prisma                # generator + datasource only
-│   ├── user.prisma
-│   ├── patient.prisma
-│   └── enums.prisma                 # Role, UserStatus, Gender
-└── migrations/                      # generated SQL, committed to git
+6 Hours
+
+360 Minutes
+
+360 / 20 = 18 Slots
 ```
 
-Prisma's schema is split across multiple files, wired together by `prisma.config.ts` at the repo root. That file also loads `.env` so the Prisma CLI can see `DATABASE_URL`.
+## Editing Rules
 
-**The data model:** a `User` has at most one `Patient` (1-to-1). Registering writes both rows in a single nested Prisma call. Deletes are meant to be soft — there's an `isDeleted` flag and a `deletedAt` timestamp on both models — but nothing in the codebase sets them yet; there's no delete endpoint at all right now.
+| Field             | Editable            |
+| ----------------- | ------------------- |
+| Date              | ❌ After Publish    |
+| Time Range        | Until First Booking |
+| Meet Link         | ✅                  |
+| Status            | ✅                  |
+| Other Information | ✅                  |
 
-## The API
+---
 
-Base URL: `http://localhost:5000`
+# Appointment Booking
 
-| Method | Path                          | Auth required | Body                         |
-| ------ | ----------------------------- | ------------- | ----------------------------- |
-| `GET`  | `/`                            | –             | health check                  |
-| `POST` | `/api/v1/auth/register`        | –             | `name`, `email`, `password`   |
-| `POST` | `/api/v1/auth/login`           | –             | `email`, `password`           |
-| `GET`  | `/api/v1/auth/me`              | yes           | –                              |
-| `POST` | `/api/v1/auth/refresh-token`   | –             | reads the `refreshToken` cookie |
+Patients can only book:
 
-Every response from `sendResponse` (i.e. everything except the root route) has this shape:
+- Today's schedules
+- Published schedules
+- Available schedules
+- Before schedule start time
 
-```json
-{ "success": true, "statusCode": 200, "message": "...", "data": {} }
+Hidden schedules:
+
+- Future schedules
+- Past schedules
+- Started schedules
+- Fully booked schedules
+
+---
+
+## Booking Flow
+
+```
+Patient
+     │
+     ▼
+Choose Slot
+     │
+     ▼
+Payment
+     │
+     ▼
+Appointment Created
+     │
+     ▼
+Serial Number Assigned
+     │
+     ▼
+Invoice PDF Generated
+     │
+     ▼
+Invoice Email Sent
 ```
 
-### Tokens: use the response body, not the cookies
+---
 
-`register` and `login` return `accessToken` and `refreshToken` two ways: in the JSON body, and as cookies. **Use the JSON body.** The cookies are set with `sameSite: "none"` but `secure: false` — that combination is invalid under the cookie spec, and modern browsers silently drop the cookie rather than send it. Grab `data.accessToken` from the response and send it yourself:
+## Appointment Serial
 
-```bash
-curl -X POST http://localhost:5000/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Test Patient","email":"patient@example.com","password":"password123"}'
+Appointments receive sequential serial numbers.
 
-curl http://localhost:5000/api/v1/auth/me \
-  -H "Authorization: Bearer <accessToken from the response above>"
+Example
+
+| Booking Order | Serial |
+| ------------- | ------ |
+| First         | 1      |
+| Second        | 2      |
+| Third         | 3      |
+
+---
+
+# Appointment Lifecycle
+
+```
+Booked
+   │
+   ▼
+Ongoing
+   │
+   ▼
+Completed
 ```
 
-`Authorization` accepts either `Bearer <token>` or the raw token with no prefix.
+Status updates:
 
-## Roles and authentication
+| Status    | Updated By |
+| --------- | ---------- |
+| Booked    | System     |
+| Ongoing   | Doctor     |
+| Completed | Doctor     |
 
-Four roles exist in the schema — `SUPER_ADMIN`, `ADMIN`, `DOCTOR`, `PATIENT` — but **registration always creates a `PATIENT`.** `registerPatient` hardcodes `Role.PATIENT` and only reads `name`, `email`, and `password` out of the request body, so sending `"role": "ADMIN"` does nothing. There's no admin module and no seed script, so the other three roles aren't reachable through the API yet. To test them, register a normal user and change their `role` directly in the database with `npx prisma studio` (opens at `http://localhost:5555`) — then log in again, since the role is baked into the token at login time and an old token keeps the old role.
+---
 
-`auth(...roles)`, exported from `checkAuth.ts`, is the route guard:
+# Prescription Management
 
-```ts
-router.get('/me', auth(Role.ADMIN, Role.DOCTOR, Role.PATIENT, Role.SUPER_ADMIN), AuthController.getMe)
-```
+A prescription can only be created when:
 
-What it actually does, in order:
+- Appointment Status = Completed
 
-1. Reads the token from the `accessToken` cookie, falling back to the `Authorization` header.
-2. Verifies the JWT signature.
-3. Checks the role **from the token payload** against the roles the route allows.
-4. Looks the user up in the database by matching `id`, `email`, `name`, *and* `role` all at once — if any of those four have changed since the token was issued, the lookup fails and the request is rejected, even though the account still exists.
-5. Rejects the request only if the user's `status` is exactly `BLOCKED`. It does **not** check `isDeleted` or a `DELETED` status, so a soft-deleted account can still authenticate as long as `status` wasn't also set to `BLOCKED`.
+Prescription contains:
 
-## Known limitations
+- Findings
+- Medicines
+- Notes
 
-Worth knowing before you spend time debugging what looks like your own mistake:
+After submission:
 
-- **Every error comes back as HTTP 500.** `globalErrorHandler` works out the "correct" status code internally but always sends the response with `500`, regardless. Read the `message` field, not the status code, to see what actually went wrong.
-- **No request validation.** Nothing checks that `email` looks like an email or that `password` meets any length requirement — Postgres and Prisma are the only things that will reject bad input, and usually not with a helpful message.
-- **`BCRYPT_SALT_ROUNDS` isn't used.** Password hashing in `auth.service.ts` calls `bcrypt.hash(password, 8)` with a hardcoded cost factor; the environment variable is read into `config` but nothing references it yet.
-- **No tests.** `npm test` is a placeholder.
+- PDF generated
+- Email sent to patient
 
-## Extending this starter
+---
 
-New features go under `src/app/module/<name>/` as four files with strict responsibilities:
+# Cancellation & Refund Policy
 
-| File                   | Responsibility                                                    |
-| ---------------------- | ------------------------------------------------------------------- |
-| `<name>.route.ts`      | Wires `auth(...roles)` to controller functions, exports `<Name>Routes` |
-| `<name>.controller.ts` | Reads `req.body` / `req.user`, calls the service, calls `sendResponse` |
-| `<name>.service.ts`    | All business logic and every Prisma call for the module              |
-| `<name>.interface.ts`  | The TypeScript types for the module's payloads                       |
+Refund depends on cancellation timing.
 
-Then mount it in `app.ts` next to the existing line:
+| Cancellation Time             | Refund         |
+| ----------------------------- | -------------- |
+| More than 1 Hour Before Start | ✅ Full Refund |
+| Within 1 Hour Before Start    | ❌ No Refund   |
+| During Consultation Time      | ❌ No Refund   |
+| After Consultation Ends       | ❌ No Refund   |
 
-```ts
-app.use('/api/v1/doctor', DoctorRoutes)
-```
+Appointments remain cancellable even after the consultation period has ended, but refunds are no longer available once the refund window has passed.
 
-Two rules keep the module boundaries useful rather than decorative:
+---
 
-- **Controllers never call Prisma directly**, and **services never touch `req` or `res`.** If a service needs to know who's calling it, pass it the small `{ userId, email, name, role }` shape, not the whole request.
-- **Never spread `req.body` straight into a Prisma `create`/`update`.** Destructure the exact fields you expect. With no validation layer in front of the API, that destructuring is the only thing stopping someone from sending `"role": "ADMIN"` in a request body and having it stick.
+# Email Notifications
 
-## Scripts
+## Patient Registration
 
-```bash
-npm run dev     # start the server with auto-reload (tsx watch) — use this while developing
-npm run build   # typecheck with tsc and emit to dist/
-npm run start   # run the server once, no watching
-```
+- Welcome Email
 
-There's no `npm run generate` / `migrate` / `studio` wrapper — call Prisma's CLI directly:
+---
 
-```bash
-npx prisma generate     # regenerate the client after editing prisma/schema/
-npx prisma migrate dev  # create + apply a migration
-npx prisma studio       # browser GUI for your data, at http://localhost:5555
-```
+## Doctor Approval
 
-### A note on `npm run build`
+- Welcome Email
 
-`npm run build` is useful for catching type errors, but its output isn't directly runnable with `node`. The codebase uses extensionless relative imports (`from './app'`), which `tsx` resolves fine but Node's native ESM loader doesn't — running `node dist/src/server.js` fails with `ERR_UNSUPPORTED_DIR_IMPORT`. That's why `npm run start` runs the TypeScript source through `tsx` rather than executing `dist/`.
+---
 
-## Troubleshooting
+## Appointment Booking
 
-**`Cannot find module '.../src/generated/prisma/client'`**
-Run `npx prisma generate` — see step 3 of [Getting started](#getting-started).
+- Invoice PDF
 
-**`Can't reach database server` / `ECONNREFUSED`**
-Postgres isn't running, or `DATABASE_URL` points somewhere it can't reach. Confirm with `pg_isready -h localhost -p 5432`.
+---
 
-**`P1010: User was denied access on the database`**
-The username or password in `DATABASE_URL` doesn't match a real role on your Postgres server. `psql -c '\du'` lists the roles that actually exist; `whoami` gives you your OS username, which is usually your local superuser with no password.
+## Prescription
 
-**Login or register throws instead of returning a token**
-Check that `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` are actually set in your `.env` — `jsonwebtoken` throws if the signing secret is `undefined`, and this project doesn't validate environment variables on startup.
+- Prescription PDF
+
+---
+
+## Admin Creation
+
+Sent to Personal Email:
+
+- Organization Email
+- Generated Password
+- Login Instructions
+- Change Password Reminder
+
+---
+
+# Business Rules
+
+## Registration
+
+- Only Patients may self-register.
+- Doctors must apply and be approved.
+- Admins cannot self-register.
+- Super Admins cannot self-register.
+
+---
+
+## Google Authentication
+
+Supported only for Patients.
+
+---
+
+## Doctor Approval
+
+Doctors cannot log in until approved.
+
+---
+
+## Schedule Rules
+
+- One schedule per day.
+- 3–8 hours only.
+- Same-day time range.
+- 20-minute slots.
+
+---
+
+## Booking Rules
+
+Patients may only book:
+
+- Today's schedules
+- Published schedules
+- Before schedule start time
+- Available slots
+
+---
+
+## Appointment Rules
+
+Payment is mandatory before appointment creation.
+
+---
+
+## Prescription Rules
+
+Only completed appointments may receive prescriptions.
+
+---
+
+## Refund Rules
+
+Refund available only when cancellation occurs more than one hour before the schedule start time.
+
+---
+
+# Conceptual Data Models
+
+## User
+
+Shared identity for all roles.
+
+Contains:
+
+- Email
+- Password (nullable)
+- Google Account
+- Role
+- Account Status
+- Email Verified
+- Must Change Password
+
+Roles:
+
+- SUPER_ADMIN
+- ADMIN
+- DOCTOR
+- PATIENT
+
+---
+
+## Patient Profile
+
+Contains:
+
+- Personal Information
+- Medical Information
+
+---
+
+## Doctor Profile
+
+Contains:
+
+- Personal Information
+- Professional Information
+- Specialization
+- Experience
+
+---
+
+## Admin Profile
+
+Contains:
+
+- Personal Information
+- Organization Email
+
+Used by:
+
+- Admin
+- Super Admin
+
+---
+
+# Future Scope
+
+The architecture is designed to support future enhancements, including:
+
+- Multiple payment gateways
+- Real-time chat
+- Push notifications
+- SMS OTP
+- Electronic Health Records (EHR)
+- Lab report management
+- Pharmacy integration
+- AI-assisted symptom analysis
+- Analytics dashboard
+- Multi-language support
+- Multi-hospital support
+- Mobile applications (Android & iOS)
+
+---
+
+# License
+
+This project is intended for educational and production-ready healthcare platform development. All business rules and workflows described in this document represent the functional specification of the PH Healthcare System.
+
+## ERD Relation Link:
+------link here
+
+## ERD Design Screenshot:
+
+<p align="center">
+  <img src="./assets/images/RentNest.png" alt="ERD Diagram" width="100%">
+</p>

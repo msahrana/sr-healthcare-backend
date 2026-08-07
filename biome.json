@@ -18,7 +18,7 @@
             "preset": "recommended",
             "suspicious": {
                 "noExplicitAny": "warn",
-                "noAssignInExpressions":"off"
+                "noAssignInExpressions": "off"
             },
             "complexity": {
                 "noCommaOperator": "info"
@@ -28,7 +28,8 @@
             },
             "style": {
                 "useNodejsImportProtocol": "off",
-                "noNonNullAssertion": "off"
+                "noNonNullAssertion": "off",
+                "useImportType": "off"
             }
         }
     },

@@ -32,3 +32,7 @@ export type UpdateProfilePayload = {
 	name?: string;
 	email?: string;
 };
+
+export interface IGoogleLoginPayload {
+	idToken: string;
+}
