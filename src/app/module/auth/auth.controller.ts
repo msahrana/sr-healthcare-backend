@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 const registerPatient = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body;
 
-    const result = await AuthService.registerPatientIntoDB(payload.data);
+    const result = await AuthService.registerPatientIntoDB(payload);
 
     const { accessToken, refreshToken, user, patient } = result;
 

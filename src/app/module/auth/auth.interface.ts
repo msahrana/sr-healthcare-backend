@@ -9,18 +9,9 @@ export interface IRegisterPatientPayload {
     name: string;
     email: string;
     password: string;
-    patient?: {
+    patient: {
         contactNumber?: string;
     };
-    // emailVerified: boolean;
-    // role: Role;
-    // status: UserStatus;
-    // needPasswordChange: boolean;
-    // isDeleted: boolean;
-    // googleId?: string | null;
-    // deletedAt?: Date | null;
-    // createdAt?: Date;
-    // updatedAt?: Date;
 }
 
 export interface IRequestUser {
