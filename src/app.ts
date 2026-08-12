@@ -12,6 +12,8 @@ import { globalErrorHandler } from './app/middleware/globalErrorHandler';
 import { notFound } from './app/middleware/notFound';
 import { AuthRoutes } from './app/module/auth/auth.route';
 import z from 'zod';
+import { redisClient } from './app/lib/redis';
+import crypto from 'crypto';
 
 const app: Application = express();
 
@@ -31,6 +33,33 @@ app.use(cookieParser());
 
 // application routes
 app.use('/api/v1/auth', AuthRoutes);
+
+app.get('/test', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        // 100000 > 999999 > 1000000
+        const otp = crypto.randomInt(100000, 1000000); // (1, 11) 1, 2, 3, 4, 5, 6,7,8 ,9, 10 => X-11
+
+        // await redisClient.set(
+        //     'forgot-password-otp:patient1@gmail.com',
+        //     '123456',
+        //     {
+        //         expiration: {
+        //             type: 'EX',
+        //             value: 60,
+        //         },
+        //     },
+        // );
+
+        res.status(httpStatus.OK).json({
+            success: true,
+            message: 'Welcome to SR Healthcare Backend System!',
+            data: otp,
+        });
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+});
 
 app.use('/zod', async (req: Request, res: Response, next: NextFunction) => {
     try {
