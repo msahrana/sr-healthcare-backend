@@ -13,6 +13,11 @@ router.post(
     AuthController.registerPatient,
 );
 router.post(
+    '/verify-email',
+    validateRequest(UserValidation.PatientEmailVerifyZodSchema),
+    AuthController.verifyPatientEmail,
+);
+router.post(
     '/login',
     validateRequest(UserValidation.LoginZodSchema),
     AuthController.loginUser,
@@ -45,6 +50,11 @@ router.post(
     '/reset-password',
     validateRequest(UserValidation.ResetPasswordZodSchema),
     AuthController.resetPassword,
+);
+router.patch(
+    '/profile-image',
+    auth(Role.ADMIN, Role.DOCTOR, Role.PATIENT, Role.SUPER_ADMIN),
+    AuthController.uploadProfileImage,
 );
 
 export const AuthRoutes = router;

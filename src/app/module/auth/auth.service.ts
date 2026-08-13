@@ -15,6 +15,7 @@ import type {
     IRegisterPatientPayload,
     IRequestUser,
     IResetPasswordPayload,
+    IVerifyEmailPayload,
 } from './auth.interface';
 import type { Prisma } from '../../../generated/prisma/client';
 import { googleClient } from '../../lib/googleAuth';
@@ -40,24 +41,146 @@ const registerPatientIntoDB = async (payload: IRegisterPatientPayload) => {
 
     const hashedPassword = await bcrypt.hash(password, 8);
 
+    const expirationSeconds = 5 * 60; // 5 min
+
+    const otpKey = `patient-registration-otp:${email}`;
+    const otpValue = crypto.randomInt(100000, 1000000).toString();
+
+    await redisClient.set(otpKey, otpValue, {
+        expiration: {
+            type: 'EX',
+            value: expirationSeconds,
+        },
+    });
+
+    const patientRegistrationKey = `patient-registration-data:${email}`;
+    const redisUserDataPayload = {
+        name,
+        email,
+        password: hashedPassword,
+        patient: patientData,
+    };
+
+    await redisClient.set(
+        patientRegistrationKey,
+        JSON.stringify(redisUserDataPayload),
+        {
+            expiration: {
+                type: 'EX',
+                value: expirationSeconds,
+            },
+        },
+    );
+
+    const templatePath = path.join(
+        process.cwd(),
+        'src/app/templates/registration-user-otp.ejs',
+    );
+
+    const templateData = {
+        name,
+        email,
+        otp: otpValue,
+        expirationMinutes: expirationSeconds / 60,
+    };
+
+    const html = await ejs.renderFile(templatePath, templateData);
+
+    await transporter.sendMail({
+        from: config.email_sender,
+        to: email,
+        subject: 'Email Verification',
+        // text : `Your OTP is ${otp}`
+        // html: `<h1>Your OTP is ${otp}</h1>`
+        html,
+    });
+};
+
+const verifyPatientEmailIntoDB = async (payload: IVerifyEmailPayload) => {
+    const otp = payload.otp;
+
+    const email = payload.email.trim().toLowerCase();
+
+    const isUserExists = await prisma.user.findUnique({
+        where: { email },
+    });
+
+    if (isUserExists?.status === 'BLOCKED') {
+        throw new Error('User is Blocked!');
+    }
+
+    if (isUserExists?.emailVerified) {
+        throw new Error('Email ALready Verified!');
+    }
+
+    if (isUserExists?.isDeleted || isUserExists?.status === 'DELETED') {
+        throw new Error('User is Deleted!');
+    }
+
+    const otpKey = `patient-registration-otp:${email}`;
+
+    const redisOtp = await redisClient.get(otpKey);
+
+    if (!redisOtp) {
+        throw new Error('Invalid OTP!');
+    }
+
+    if (redisOtp !== otp) {
+        throw new Error('OTP Does Not Match!');
+    }
+
+    await redisClient.del([otpKey]);
+
+    const patientRegistrationKey = `patient-registration-data:${email}`;
+
+    const redisPatientData = await redisClient.get(patientRegistrationKey);
+
+    if (!redisPatientData) {
+        throw new Error('Patient Does not Exist!');
+    }
+
+    const patientPayload: IRegisterPatientPayload =
+        JSON.parse(redisPatientData);
+
     const createdUser = await prisma.user.create({
         data: {
-            name,
-            email,
-            password: hashedPassword,
+            name: patientPayload.name,
+            email: patientPayload.email,
+            password: patientPayload.password,
             role: Role.PATIENT,
-            emailVerified: false,
+            emailVerified: true,
             status: UserStatus.ACTIVE,
             patient: {
                 create: {
-                    name,
-                    email,
-                    contactNumber: patientData?.contactNumber || '',
+                    name: patientPayload.name,
+                    email: patientPayload.email,
+                    contactNumber: patientPayload?.patient?.contactNumber || '',
                 },
             },
         },
         omit: { password: true },
         include: { patient: true },
+    });
+
+    await redisClient.del(patientRegistrationKey);
+
+    const templatePath = path.join(
+        process.cwd(),
+        'src/app/templates/patient-welcome-email.ejs',
+    );
+
+    const templateData = {
+        name: createdUser.name,
+    };
+
+    const html = await ejs.renderFile(templatePath, templateData);
+
+    await transporter.sendMail({
+        from: config.email_sender,
+        to: email,
+        subject: 'Welcome To SR Healthcare System',
+        // html: `<h1>Your Password Is Changed Successfully.</h1>`
+        html,
     });
 
     const { patient, ...user } = createdUser;
@@ -381,6 +504,27 @@ const googleLoginIntoDB = async (payload: IGoogleLoginPayload) => {
                     },
                 },
             });
+
+            // WelCome Message
+            const templatePath = path.join(
+                process.cwd(),
+                'src/app/templates/patient-welcome-email.ejs',
+            );
+
+            const templateData = {
+                name: user.name,
+            };
+
+            const html = await ejs.renderFile(templatePath, templateData);
+
+            await transporter.sendMail({
+                from: config.email_sender,
+                to: user.email,
+                subject: 'Welcome To SR Healthcare System',
+                // text : `Your OTP is ${otp}`
+                // html: `<h1>Your OTP is ${otp}</h1>`
+                html,
+            });
         }
     }
 
@@ -563,8 +707,11 @@ const resetPasswordIntoDB = async (payload: IResetPasswordPayload) => {
     });
 };
 
+const uploadProfileImageIntoDB = async () => {};
+
 export const AuthService = {
     registerPatientIntoDB,
+    verifyPatientEmailIntoDB,
     loginUserIntoDB,
     getMeIntoDB,
     refreshTokenIntoDB,
@@ -575,4 +722,5 @@ export const AuthService = {
     googleLoginIntoDB,
     forgotPasswordIntoDB,
     resetPasswordIntoDB,
+    uploadProfileImageIntoDB,
 };
