@@ -4,6 +4,7 @@ import { auth } from '../../middleware/checkAuth';
 import { AuthController } from './auth.controller';
 import { validateRequest } from '../../middleware/validateRequest';
 import { UserValidation } from './auth.validation';
+import { upload } from '../../lib/multer';
 
 const router = Router();
 
@@ -54,6 +55,7 @@ router.post(
 router.patch(
     '/profile-image',
     auth(Role.ADMIN, Role.DOCTOR, Role.PATIENT, Role.SUPER_ADMIN),
+    upload.single('profileImage'),
     AuthController.uploadProfileImage,
 );
 

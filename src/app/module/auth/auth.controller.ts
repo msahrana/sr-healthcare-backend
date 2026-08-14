@@ -254,9 +254,24 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-const uploadProfileImage = catchAsync(
-    async (req: Request, res: Response) => {},
-);
+const uploadProfileImage = catchAsync(async (req: Request, res: Response) => {
+    // console.log(req.file, 'Req.File:');
+    if (!req.file) {
+        return res.status(400).json({ error: 'No File Uploaded!!!' });
+    }
+
+    const userId = req.user?.id as string;
+    const files = req.file?.buffer;
+
+    const result = await AuthService.uploadProfileImageIntoDB(files, userId);
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'New tokens generated successfully!',
+        data: result,
+    });
+});
 
 export const AuthController = {
     registerPatient,

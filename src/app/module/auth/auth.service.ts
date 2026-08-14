@@ -25,6 +25,8 @@ import { redisClient } from '../../lib/redis';
 import { transporter } from '../../lib/nodemailer';
 import ejs from 'ejs';
 import path from 'path';
+import { cloudinary } from '../../lib/cloudinary';
+import { UploadApiResponse } from 'cloudinary';
 
 const registerPatientIntoDB = async (payload: IRegisterPatientPayload) => {
     const { name, password, patient: patientData } = payload;
@@ -707,7 +709,89 @@ const resetPasswordIntoDB = async (payload: IResetPasswordPayload) => {
     });
 };
 
-const uploadProfileImageIntoDB = async () => {};
+const uploadProfileImageIntoDB = async (buffer: Buffer, userId: string) => {
+    // const cloudinaryResult = cloudinary.uploader
+    //     .upload_stream(
+    //         {
+    //             resource_type: 'auto',
+    //         },
+    //         async (error, result) => {
+    //             if (error) {
+    //                 console.log(error);
+    //                 throw new Error(error.message);
+    //             }
+
+    //             console.log(result, 'Result:');
+
+    //             const updatedUser = await prisma.user.update({
+    //                 where: { id: userId },
+    //                 data: {
+    //                     imageUrl: result?.secure_url,
+    //                     imagePublicId: result?.public_id,
+    //                 },
+    //             });
+
+    //             console.log(updatedUser);
+    //         },
+    //     )
+    //     .end(buffer);
+    // console.log(cloudinaryResult);
+
+    const currentUser = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+        select: {
+            imageUrl: true,
+            imagePublicId: true,
+        },
+    });
+
+    const cloudinaryResult = await new Promise<UploadApiResponse>(
+        (resolve, reject) => {
+            cloudinary.uploader
+                .upload_stream(
+                    {
+                        resource_type: 'auto',
+                    },
+
+                    async (error, result) => {
+                        if (error) {
+                            return reject(error);
+                        }
+
+                        if (!result) {
+                            return reject(
+                                new Error('No result returned from Cloudinary'),
+                            );
+                        }
+
+                        resolve(result);
+                    },
+                )
+                .end(buffer);
+        },
+    );
+
+    const updatedUser = await prisma.user.update({
+        where: {
+            id: userId,
+        },
+        data: {
+            imageUrl: cloudinaryResult.secure_url,
+            imagePublicId: cloudinaryResult.public_id,
+        },
+        omit: {
+            password: true,
+        },
+    });
+
+    if (currentUser?.imagePublicId && currentUser.imageUrl) {
+        await cloudinary.uploader.destroy(currentUser.imagePublicId);
+    }
+
+    return updatedUser;
+};
 
 export const AuthService = {
     registerPatientIntoDB,
