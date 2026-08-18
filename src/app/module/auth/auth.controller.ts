@@ -65,7 +65,9 @@ const verifyPatientEmail = catchAsync(async (req: Request, res: Response) => {
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body;
+
     const result = await AuthService.loginUserIntoDB(payload);
+
     const { accessToken, refreshToken } = result;
 
     res.cookie('accessToken', accessToken, {
@@ -74,6 +76,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
         sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
     });
+
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: false,
@@ -112,9 +115,11 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
     if (!req.cookies.refreshToken) {
         throw new Error('Refresh token is missing');
     }
+
     const result = await AuthService.refreshTokenIntoDB(
         req.cookies.refreshToken,
     );
+
     const { accessToken, refreshToken: newRefreshToken } = result;
 
     res.cookie('accessToken', accessToken, {
@@ -123,6 +128,7 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
         sameSite: 'none',
         maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
     });
+    
     res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
         secure: false,

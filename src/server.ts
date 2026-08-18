@@ -17,10 +17,10 @@ const main = async () => {
         console.log('🗃️  Database connected successfully!');
 
         await redisClient.connect();
-        console.log('Redis Connected Successfully.');
+        console.log('🔥 Redis Connected Successfully.');
 
         await transporter.verify();
-        console.log('Nodemailer Connected Successfully.');
+        console.log('⭐ Nodemailer Connected Successfully.');
 
         await seedSuperAdmin();
         await seedTesterAdmin();
