@@ -27,7 +27,7 @@ const bookAppointmentIntoDB = async () => {
                 amount: '1200',
                 currency: 'BDT',
                 intent: 'sale',
-                merchantInvoiceNumber: 'Inv4', // apppointment id
+                merchantInvoiceNumber: 'Inv4', // appointment id
             }),
         },
     );
@@ -55,7 +55,7 @@ const bookAppointmentCallbackIntoDB = async (query: Record<string, any>) => {
     const bkashIdToken = await getBKashIdToken();
 
     if (!bkashIdToken) {
-        throw new Error('No Bkash Access Token Found!');
+        throw new Error('No BKash Access Token Found!');
     }
 
     const executedPaymentResponse = await fetch(
@@ -68,7 +68,6 @@ const bookAppointmentCallbackIntoDB = async (query: Record<string, any>) => {
                 Authorization: bkashIdToken,
                 'X-App-Key': config.bkash_app_key,
             },
-
             body: JSON.stringify({
                 paymentID: paymentId,
             }),
@@ -87,7 +86,7 @@ const bookAppointmentCallbackIntoDB = async (query: Record<string, any>) => {
     if (status === 'failure') {
         return {
             executedPaymentResult,
-            redirectUrl: `${config.frontend_url}/dashboard/my-appointments?status=failue`,
+            redirectUrl: `${config.frontend_url}/dashboard/my-appointments?status=failure`,
         };
     }
 
