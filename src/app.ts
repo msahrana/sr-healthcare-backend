@@ -14,7 +14,7 @@ import { AuthRoutes } from './app/module/auth/auth.route';
 import z from 'zod';
 import { AppointmentRoutes } from './app/module/appointment/appointment.route';
 import { getBKashIdToken } from './app/lib/bkash';
-// import crypto from 'crypto';
+import { DoctorRoutes } from './app/module/doctor/doctor.route';
 
 const app: Application = express();
 
@@ -35,6 +35,7 @@ app.use(cookieParser());
 // application routes
 app.use('/api/v1/auth', AuthRoutes);
 app.use('/api/v1/appointment', AppointmentRoutes);
+app.use('/api/v1/doctor', DoctorRoutes);
 
 // testing routes
 // app.get('/test', async (req: Request, res: Response, next: NextFunction) => {
