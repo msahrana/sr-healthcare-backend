@@ -6,9 +6,12 @@ export interface IApplyAsDoctorPayload {
 
     doctor: {
         specialization: string;
-        designation: string;
-        qualification: string;
-        experience: number;
+        licenseNumber: string;
+        qualifications: string;
+        address?: string;
+        experienceYears: number;
         bio?: string;
+        consultationFee?: number;
+        contactNumber?: string;
     };
 }

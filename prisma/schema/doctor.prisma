@@ -14,17 +14,17 @@ model Doctor {
   consultationFee   Decimal? @db.Decimal(10, 2)
 
   contactNumber      String?
-  rejectionReason    String?
-  reviewedBy         String?
-
-  reviewedAt         DateTime?
-
+ 
   resume            String?
   resumePublicId    String?
   
   additionalFiles   Json? // Array of file URLs or file metadata // Stores: [{ url: "...", publicId: "..." }]
 
-verificationStatus DoctorVerificationStatus @default(PENDING)
+  verificationStatus DoctorVerificationStatus @default(PENDING)
+  rejectionReason    String?
+
+  reviewedBy         String?
+  reviewedAt         DateTime?
 
   isDeleted         Boolean   @default(false)
   deletedAt         DateTime?
