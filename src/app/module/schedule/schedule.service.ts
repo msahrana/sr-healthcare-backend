@@ -38,7 +38,7 @@ const createScheduleIntoDB = async (
             'Start Date Time And End Date Time Must Be On The Same Day.',
         );
     }
-    
+
     if (isAfter(payload.startDateTime, payload.endDateTime)) {
         // 25 August =>  3:00 PM - 9:00 PM
 
@@ -71,8 +71,8 @@ const createScheduleIntoDB = async (
     }
 
     const durationInMinutes = differenceInMinutes(
-        payload.startDateTime,
         payload.endDateTime,
+        payload.startDateTime,
     );
 
     const MINUTES_ALLOCATED_PER_SLOT = 20;
