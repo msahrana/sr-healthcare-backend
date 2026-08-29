@@ -2,7 +2,7 @@ import { ApplyAsDoctorValidationZodSchema } from './doctor.validation';
 import { sendResponse } from '../../utils/sendResponse';
 import { catchAsync } from '../../utils/catchAsync';
 import { DoctorServices } from './doctor.service';
-// import { AppError } from "../../utils/AppError";
+import { AppError } from '../../utils/AppError';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 
@@ -17,7 +17,10 @@ const applyAsDoctor = catchAsync(async (req: Request, res: Response) => {
     );
 
     if (!zodValidationResult.success) {
-        throw new Error(zodValidationResult.error.issues[0].message);
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            zodValidationResult.error.issues[0].message,
+        );
     }
 
     const payload = zodValidationResult.data;
@@ -75,9 +78,82 @@ const getAllDoctors = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const updateDoctorProfile = catchAsync(async (req: Request, res: Response) => {
+    const payload = req.body;
+    const user = req.user!;
+
+    const result = await DoctorServices.updateDoctorProfileIntoDB(
+        payload,
+        user,
+    );
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Doctor Profile Updated Successfully!',
+        data: result,
+    });
+});
+
+const getAvailableDoctorByTodaysSchedule = catchAsync(
+    async (req: Request, res: Response) => {
+        const query = req.query;
+
+        const { data, meta } =
+            await DoctorServices.getAvailableDoctorByTodaysScheduleIntoDB(
+                query,
+            );
+
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: "Today's Available Doctors Retrieved Successfully!",
+            data,
+            meta,
+        });
+    },
+);
+
+const getAllDoctorsListPublic = catchAsync(
+    async (req: Request, res: Response) => {
+        const query = req.query;
+
+        const { data, meta } =
+            await DoctorServices.getAllDoctorsListPublicIntoDB(query);
+
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'Doctors Retrieved Successfully!',
+            data,
+            meta,
+        });
+    },
+);
+
+const getSingleDoctorPublicProfile = catchAsync(
+    async (req: Request, res: Response) => {
+        const doctorId = req.params.doctorId as string;
+
+        const result =
+            await DoctorServices.getSingleDoctorPublicProfileIntoDB(doctorId);
+
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'Doctor Profile Retrieved Successfully!',
+            data: result,
+        });
+    },
+);
+
 export const DoctorControllers = {
     applyAsDoctor,
     verifyDoctorEmail,
     approveDoctor,
     getAllDoctors,
+    updateDoctorProfile,
+    getAvailableDoctorByTodaysSchedule,
+    getAllDoctorsListPublic,
+    getSingleDoctorPublicProfile,
 };
