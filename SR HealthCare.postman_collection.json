@@ -1,0 +1,881 @@
+{
+  "info": {
+    "_postman_id": "de4675e3-0c58-40cf-b640-ed8ed117535f",
+    "name": "SR HealthCare",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40003326"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Sayed Anower rana\",\r\n    \"email\": \"msahossainrana@gmail.com\",\r\n    \"password\": \"$2b$12$SAyed2244\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Credential Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"msahossainrana@gmail.com\",\r\n    \"password\": \"$2b$12$SAyed2244\"\r\n }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Users",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"yusuf@example.com\",\r\n    \"password\": \"Yusuf123\"\r\n }"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/all-users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "all-users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single User By Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"yusuf@example.com\",\r\n    \"password\": \"Yusuf123\"\r\n }"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/user/4ed3d50c-3440-463e-a914-60c4aae81f15",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "user",
+                "4ed3d50c-3440-463e-a914-60c4aae81f15"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"yusuf@example.com\",\r\n    \"password\": \"Yusuf123\"\r\n }"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Abdullah Al Mamun Mia vi\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/my-profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "my-profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"oldPassword\": \"$2b$12$hashedPassword012\",\r\n    \"newPassword\": \"$2b$12$hashedPassword0121\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/change-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Google Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"idToken\":\"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/google",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "google"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Zod Check",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Nusrat Jahan 212\",\r\n    \"email\": \"nusrat.jahan212@gmail.com\",\r\n    \"age\" : 32,\r\n    \"password\": \"$2b$12$hashedPassword012\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/zod",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "zod"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"abdullah.mamun@gmail.com\"\r\n }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/forgot-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"msahossainrana@gmail.com\",\r\n    \"otp\" : \"976014\",\r\n    \"newPassword\": \"$2b$12$SAyed2244\"\r\n }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/reset-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"msahossainrana@gmail.com\",\r\n    \"otp\" : \"359777\"\r\n }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/verify-email",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "verify-email"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Profile Image",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profileImage",
+                  "type": "file",
+                  "uuid": "04f6c495-c6bc-4ebd-94ba-65b85a4669b7",
+                  "src": "/C:/Users/user/Desktop/Sayed-Image.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/profile-image",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "profile-image"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Patient",
+      "item": []
+    },
+    {
+      "name": "Doctor",
+      "item": [
+        {
+          "name": "Apply As Doctor",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "uuid": "5f18bc45-88d5-4e0e-bfef-ee744bb3cc15",
+                  "src": "/C:/Users/user/Desktop/Doctor/01_Dr_Md_Arif_Hossain_Resume_SAMPLE.pdf"
+                },
+                {
+                  "key": "additionalFiles",
+                  "type": "file",
+                  "uuid": "3ac229c5-39c2-4830-bc2b-884198135132",
+                  "src": [
+                    "/C:/Users/user/Desktop/Doctor/02_MBBS_Degree_Certificate_SAMPLE.pdf",
+                    "/C:/Users/user/Desktop/Doctor/03_Medical_Registration_Certificate_SAMPLE.pdf",
+                    "/C:/Users/user/Desktop/Doctor/04_Internship_Completion_Certificate_SAMPLE.pdf",
+                    "/C:/Users/user/Desktop/Doctor/05_Postgraduate_Training_Certificate_SAMPLE.pdf"
+                  ]
+                },
+                {
+                  "key": "data",
+                  "value": "{\n  \"user\": {\n    \"name\": \"Dr. Md Arif Hossain\",\n    \"email\": \"dr.arifhossain@gmail.com\"\n  },\n  \"doctor\": {\n    \"address\": \"House 25, Road 7, Dhanmondi, Dhaka, Bangladesh\",\n    \"specialization\": \"Cardiology\",\n    \"licenseNumber\": \"BMDC-A123456\",\n    \"qualifications\": \"MBBS, FCPS in Cardiology\",\n    \"experienceYears\": \"8\",\n    \"bio\": \"Experienced cardiologist specializing in cardiovascular disease diagnosis and treatment.\",\n    \"consultationFee\": \"1200\",\n    \"contactNumber\": \"+8801712345678\"\n  }\n}",
+                  "type": "text",
+                  "uuid": "c24d9139-785c-41ab-b030-5d5b5b04ba18"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/apply-as-doctor",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "doctor",
+                "apply-as-doctor"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Doctor Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"testerdoctor@gmail.com\",\r\n    \"password\": \"Tester@doctor12345\"\r\n }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Available Doctor Today",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/public/available-today",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "doctor",
+                "public",
+                "available-today"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Doctors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/public/all-doctors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "doctor",
+                "public",
+                "all-doctors"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Schedule",
+      "item": [
+        {
+          "name": "Create Schedule",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"startDateTime\": \"2026-08-31T14:00:00.000Z\",\r\n  \"endDateTime\": \"2026-08-31T16:00:00.000Z\",\r\n  \"meetingLink\": \"https://meet.google.com/abc-defg-hij\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/create-schedule",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "schedule",
+                "create-schedule"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Schedule",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"startDateTime\": \"2026-08-30T21:00:00.000Z\",\r\n  \"endDateTime\": \"2026-08-30T22:00:00.000Z\",\r\n  \"meetingLink\": \"https://meet.google.com/abc-defg-hij\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/my-schedules",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "schedule",
+                "my-schedules"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Schedule By Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"startDateTime\": \"2026-08-30T21:00:00.000Z\",\r\n  \"endDateTime\": \"2026-08-30T22:00:00.000Z\",\r\n  \"meetingLink\": \"https://meet.google.com/abc-defg-hij\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/51da3df7-9d4e-4e2a-b6fd-f2728fc39177",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "schedule",
+                "51da3df7-9d4e-4e2a-b6fd-f2728fc39177"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Todays Schedule",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"startDateTime\": \"2026-08-30T21:00:00.000Z\",\r\n  \"endDateTime\": \"2026-08-30T22:00:00.000Z\",\r\n  \"meetingLink\": \"https://meet.google.com/abc-defg-hij\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/todays-schedule?doctorId=1dd90fc1-6581-4570-ace0-c6f9f27b8a0c",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "schedule",
+                "todays-schedule"
+              ],
+              "query": [
+                {
+                  "key": "doctorId",
+                  "value": "1dd90fc1-6581-4570-ace0-c6f9f27b8a0c"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Publish Schedule",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/schedule/publish-schedule/51da3df7-9d4e-4e2a-b6fd-f2728fc39177",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "schedule",
+                "publish-schedule",
+                "51da3df7-9d4e-4e2a-b6fd-f2728fc39177"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Appointment",
+      "item": [
+        {
+          "name": "Book Appointment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"doctorId\" : \"1dd90fc1-6581-4570-ace0-c6f9f27b8a0c\",\r\n    \"appointmentDate\" : \"2026-08-30T21:00:00.000Z\",\r\n    \"notes\" : \"First time consulation\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/book-appointment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "appointment",
+                "book-appointment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pay Appointment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"appointmentId\" : \"ed435c3a-dbb6-4d04-b647-7448cedabad9\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/pay-appointment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "appointment",
+                "pay-appointment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Appointment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"appointmentId\" : \"eeec68d8-6127-47a8-acfc-39777b49e12b\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/appointment/cancel-appointment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "appointment",
+                "cancel-appointment"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Prescription",
+      "item": []
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": " {\r\n    \"email\": \"tara.mony@srhealthcare.com\",\r\n    \"password\": \"$2b$12$TaraMonymost7860\"\r\n }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Doctors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/doctor/all-doctors",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "doctor",
+                "all-doctors"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "supabase_service_role_api_key_177v",
+      "secret": true
+    }
+  ]
+}

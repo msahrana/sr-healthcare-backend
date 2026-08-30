@@ -23,6 +23,8 @@ router.get(
     ScheduleControllers.getMySchedules,
 );
 
+router.get('/todays-schedule', ScheduleControllers.getTodaysSchedules);
+
 router.get(
     '/all-schedules',
     auth(Role.ADMIN, Role.SUPER_ADMIN),
@@ -53,7 +55,5 @@ router.delete(
     auth(Role.DOCTOR),
     ScheduleControllers.deleteSchedule,
 );
-
-router.get('/todays-schedule', ScheduleControllers.getTodaysSchedules);
 
 export const ScheduleRoutes = router;

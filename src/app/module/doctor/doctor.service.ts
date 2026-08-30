@@ -31,11 +31,11 @@ const applyAsDoctorIntoDB = async (
     resume: Express.Multer.File | null,
     additionalFiles: Express.Multer.File[],
 ) => {
-    const isUserExists = await prisma.user.findUnique({
-        // =========================================================
-        // 1. Check whether user already exists
-        // =========================================================
+    // =========================================================
+    // 1. Check whether user already exists
+    // =========================================================
 
+    const isUserExists = await prisma.user.findUnique({
         where: {
             email: payload.user.email,
         },
