@@ -3,7 +3,7 @@ import { prisma } from './prisma';
 import { DoctorVerificationStatus, Role } from '../../generated/prisma/enums';
 
 export const deleteUnverifiedDoctors = async () => {
-    cron.schedule('*/10 * * * *', async () => {
+    cron.schedule('*/60 * * * *', async () => {
         try {
             const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
@@ -31,13 +31,13 @@ export const deleteUnverifiedDoctors = async () => {
         }
 
         console.log(
-            'Unverified Doctor Delete cron schedule (every 10 minutes)!',
+            'Unverified Doctor Delete cron schedule (every 60 minutes)!',
         );
     });
 };
 
 export const deleteRejectedDoctors = async () => {
-    cron.schedule('*/60 * * * *', async () => {
+    cron.schedule('* */6 * * *', async () => {
         try {
             const oneMonthAgo = new Date(Date.now() - 60 * 60 * 24 * 30 * 1000);
 
@@ -64,6 +64,6 @@ export const deleteRejectedDoctors = async () => {
             );
         }
 
-        console.log('Rejected Doctor Delete cron schedule (every 60 minutes)!');
+        console.log('Rejected Doctor Delete cron schedule (every 6 hours)!');
     });
 };
