@@ -630,7 +630,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:5000/api/v1/schedule/51da3df7-9d4e-4e2a-b6fd-f2728fc39177",
+              "raw": "http://localhost:5000/api/v1/schedule/6606bd10-6485-43e6-9cdd-ed5e76bf3f61",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -640,7 +640,7 @@
                 "api",
                 "v1",
                 "schedule",
-                "51da3df7-9d4e-4e2a-b6fd-f2728fc39177"
+                "6606bd10-6485-43e6-9cdd-ed5e76bf3f61"
               ]
             }
           },
@@ -721,7 +721,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"doctorId\" : \"1dd90fc1-6581-4570-ace0-c6f9f27b8a0c\",\r\n    \"appointmentDate\" : \"2026-08-30T21:00:00.000Z\",\r\n    \"notes\" : \"First time consulation\"\r\n}",
+              "raw": "{\r\n    \"scheduleId\" : \"6606bd10-6485-43e6-9cdd-ed5e76bf3f61\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -811,7 +811,61 @@
     },
     {
       "name": "Prescription",
-      "item": []
+      "item": [
+        {
+          "name": "Create Prescription",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"appointmentId\": \"cbc76c62-d3b7-46a7-9311-e5f9bd50f835\",\r\n  \"findings\": \"Mild fever, sore throat, nasal congestion, and symptoms consistent with a common viral upper respiratory infection.\",\r\n  \"medicines\": [\r\n    {\r\n      \"name\": \"Paracetamol 500mg\",\r\n      \"dosage\": \"1 tablet\",\r\n      \"frequency\": \"3 times daily\",\r\n      \"duration\": \"3 days\",\r\n      \"instructions\": \"Take after meals when fever or body pain occurs.\"\r\n    },\r\n    {\r\n      \"name\": \"Cetirizine 10mg\",\r\n      \"dosage\": \"1 tablet\",\r\n      \"frequency\": \"Once daily\",\r\n      \"duration\": \"5 days\",\r\n      \"instructions\": \"Take at night.\"\r\n    },\r\n    {\r\n      \"name\": \"Omeprazole 20mg\",\r\n      \"dosage\": \"1 capsule\",\r\n      \"frequency\": \"Once daily\",\r\n      \"duration\": \"5 days\",\r\n      \"instructions\": \"Take 30 minutes before breakfast.\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/v1/prescription/create-prescription",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "prescription",
+                "create-prescription"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Prescription",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/v1/prescription/cbc76c62-d3b7-46a7-9311-e5f9bd50f835",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "v1",
+                "prescription",
+                "cbc76c62-d3b7-46a7-9311-e5f9bd50f835"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     },
     {
       "name": "Admin",

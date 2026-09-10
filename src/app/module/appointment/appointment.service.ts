@@ -302,242 +302,259 @@ const payAppointmentIntoDB = async (
 };
 
 const bookAppointmentCallbackIntoDB = async (query: Record<string, any>) => {
-    const transactionResult = await prisma.$transaction(async (tx) => {
-        const paymentId = query.paymentID;
+    const transactionResult = await prisma.$transaction(
+        async (tx) => {
+            const paymentId = query.paymentID;
 
-        if (!paymentId) {
-            throw new AppError(httpStatus.BAD_REQUEST, 'Payment Id Missing!');
-        }
-
-        const status = query.status;
-
-        if (!status) {
-            throw new AppError(
-                httpStatus.BAD_REQUEST,
-                'Payment Status is Missing!',
-            );
-        }
-
-        const bkashIdToken = await getBKashIdToken();
-
-        if (!bkashIdToken) {
-            throw new AppError(
-                httpStatus.BAD_GATEWAY,
-                'No BKash Access Token Found!',
-            );
-        }
-
-        const executedPaymentResponse = await fetch(
-            `${config.bkash_base_url}/tokenized/checkout/execute`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    Authorization: bkashIdToken,
-                    'X-App-Key': config.bkash_app_key,
-                },
-                body: JSON.stringify({
-                    paymentID: paymentId,
-                }),
-            },
-        );
-
-        const executedPaymentResult = await executedPaymentResponse.json();
-
-        if (status === 'success') {
-            const appointment = await prisma.appointment.findUnique({
-                where: {
-                    id: executedPaymentResult.merchantInvoiceNumber,
-                },
-                include: {
-                    schedule: true,
-                    patient: true,
-                    doctor: true,
-                },
-            });
-
-            if (!appointment) {
+            if (!paymentId) {
                 throw new AppError(
-                    httpStatus.NOT_FOUND,
-                    'Appointment Not Found',
+                    httpStatus.BAD_REQUEST,
+                    'Payment Id Missing!',
                 );
             }
 
-            // total slot = 3 , available slot = 3
-            // (total - available) + 1 [serial no 1]
+            const status = query.status;
 
-            // total slot = 3 , available slot = 2
-            // (total - available) + 1 [serial no 2]
+            if (!status) {
+                throw new AppError(
+                    httpStatus.BAD_REQUEST,
+                    'Payment Status is Missing!',
+                );
+            }
 
-            const alreadyBookedSlots =
-                appointment.schedule.totalSlots -
-                appointment.schedule.availableSlots;
+            const bkashIdToken = await getBKashIdToken();
 
-            const serialNumber = alreadyBookedSlots + 1;
+            if (!bkashIdToken) {
+                throw new AppError(
+                    httpStatus.BAD_GATEWAY,
+                    'No BKash Access Token Found!',
+                );
+            }
 
-            // 25 August => 3:00 PM - 4:00 PM
-            // 1st person, joining time => startDateTime = 2026-08-25T15:00:00.436Z => 3:00 PM
-            // serial number {(1) - 1 }* 20 => 0 minutes [0 minutes add to startDateTime]
-
-            // 2nd person, joining time => startDateTime = 2026-08-25T15:20:00.436Z => 3:00 PM
-            // serial number {(2) - 1} * 20 => 20 minutes [20 minutes add to startDateTime]
-
-            // 3nd person, joining time => startDateTime = 2026-08-25T15:40:00.436Z => 3:00 PM
-            // serial number {(3) - 1} * 20 => 40 minutes [40 minutes add to startDateTime]
-
-            const joiningTime = addMinutes(
-                appointment.schedule.startDateTime,
-                (serialNumber - 1) * 20,
-            );
-
-            await tx.appointment.update({
-                where: {
-                    id: executedPaymentResult.merchantInvoiceNumber,
-                },
-                data: {
-                    status: AppointmentStatus.CONFIRMED,
-                    joiningTime,
-                    serialNumber,
-                },
-            });
-
-            const newAvailableSlots = appointment.schedule.availableSlots - 1;
-
-            await prisma.schedule.update({
-                where: {
-                    id: appointment.schedule.id,
-                },
-                data: {
-                    availableSlots: newAvailableSlots,
-                },
-            });
-
-            await tx.payment.update({
-                where: {
-                    appointmentId: executedPaymentResult.merchantInvoiceNumber,
-                    bkashPaymentId: paymentId,
-                },
-                data: {
-                    status: PaymentStatus.PAID,
-                    bkashTrxId: executedPaymentResult.trxID,
-                    paidAt: executedPaymentResult.paymentExecuteTime,
-                    gatewayResponse: executedPaymentResult,
-                },
-            });
-
-            //Create pdf file
-            const pdfDocument = new PDFDocument({ margin: 50 });
-
-            const pdfChunks: Buffer[] = [];
-
-            //Create listener
-            pdfDocument.on('data', (chunk: Buffer) => {
-                pdfChunks.push(chunk);
-            });
-
-            const pdfReadyPromise = new Promise<Buffer>((resolve) => {
-                pdfDocument.on('end', () => {
-                    resolve(Buffer.concat(pdfChunks));
-                });
-            });
-
-            pdfDocument
-                .fontSize(20)
-                .text('SR Healthcare System', { align: 'center' });
-            pdfDocument
-                .fontSize(14)
-                .text('Appointment Invoice', { align: 'center' });
-            pdfDocument.moveDown(2);
-
-            pdfDocument
-                .fontSize(12)
-                .text(`Patient Name: ${appointment.patient?.name}`);
-            pdfDocument.text(`Patient Email: ${appointment.patient?.email}`);
-            pdfDocument.moveDown();
-
-            pdfDocument.text(`Doctor Name: ${appointment.doctor?.name}`);
-            pdfDocument.text(
-                `Specialization: ${appointment.doctor?.specialization}`,
-            );
-            pdfDocument.moveDown();
-
-            pdfDocument.text(
-                `Appointment Date: ${appointment.schedule.startDateTime.toDateString()}`,
-            );
-            pdfDocument.text(`Your Joining Time: ${joiningTime.toString()}`);
-            pdfDocument.text(`Your Serial Number: ${serialNumber}`);
-            pdfDocument.text(
-                `Meeting Link: ${appointment.schedule.meetingLink}`,
-            );
-            pdfDocument.moveDown();
-
-            pdfDocument.text(
-                `Amount Paid: ${executedPaymentResult.amount} BDT`,
-            );
-            pdfDocument.text(`Payment Method: bKash`);
-            pdfDocument.text(`Transaction Id: ${executedPaymentResult.trxID}`);
-            pdfDocument.text(
-                `Paid At: ${executedPaymentResult.paymentExecuteTime}`,
-            );
-
-            pdfDocument.end();
-
-            const pdfBuffer = await pdfReadyPromise;
-
-            await transporter.sendMail({
-                from: config.email_sender,
-                to: appointment.patient.email,
-                subject: 'Your Appointment Invoice - SR Healthcare System',
-                text: 'Thank you for booking an appointment. Please find your invoice attached.',
-                attachments: [
-                    {
-                        filename: 'invoice.pdf',
-                        content: pdfBuffer,
+            const executedPaymentResponse = await fetch(
+                `${config.bkash_base_url}/tokenized/checkout/execute`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        Authorization: bkashIdToken,
+                        'X-App-Key': config.bkash_app_key,
                     },
-                ],
-            });
+                    body: JSON.stringify({
+                        paymentID: paymentId,
+                    }),
+                },
+            );
 
-            return {
-                redirectUrl: `${config.frontend_url}/dashboard/my-appointments?status=success`,
-            };
-        } else if (status === 'failure') {
-            await tx.payment.update({
-                where: {
-                    bkashPaymentId: paymentId,
-                },
-                data: {
-                    status: PaymentStatus.FAILED,
-                    gatewayResponse: executedPaymentResult,
-                },
-            });
+            const executedPaymentResult = await executedPaymentResponse.json();
 
-            return {
-                executedPaymentResult,
-                redirectUrl: `${config.frontend_url}/dashboard/my-appointments?status=failure`,
-            };
-        } else if (status === 'cancel') {
-            await tx.payment.update({
-                where: {
-                    bkashPaymentId: paymentId,
-                },
-                data: {
-                    status: PaymentStatus.CANCELLED,
-                    gatewayResponse: executedPaymentResult,
-                },
-            });
+            if (status === 'success') {
+                const appointment = await prisma.appointment.findUnique({
+                    where: {
+                        id: executedPaymentResult.merchantInvoiceNumber,
+                    },
+                    include: {
+                        schedule: true,
+                        patient: true,
+                        doctor: true,
+                    },
+                });
 
-            return {
-                executedPaymentResult,
-                redirectUrl: `${config.frontend_url}/dashboard/my-appointments?status=cancel`,
-            };
-        } else {
-            return {
-                executedPaymentResult,
-                redirectUrl: `${config.frontend_url}/dashboard/my-appointments?error=payment-failed`,
-            };
-        }
-    });
+                if (!appointment) {
+                    throw new AppError(
+                        httpStatus.NOT_FOUND,
+                        'Appointment Not Found',
+                    );
+                }
+
+                // total slot = 3 , available slot = 3
+                // (total - available) + 1 [serial no 1]
+
+                // total slot = 3 , available slot = 2
+                // (total - available) + 1 [serial no 2]
+
+                const alreadyBookedSlots =
+                    appointment.schedule.totalSlots -
+                    appointment.schedule.availableSlots;
+
+                const serialNumber = alreadyBookedSlots + 1;
+
+                // 25 August => 3:00 PM - 4:00 PM
+                // 1st person, joining time => startDateTime = 2026-08-25T15:00:00.436Z => 3:00 PM
+                // serial number {(1) - 1 }* 20 => 0 minutes [0 minutes add to startDateTime]
+
+                // 2nd person, joining time => startDateTime = 2026-08-25T15:20:00.436Z => 3:00 PM
+                // serial number {(2) - 1} * 20 => 20 minutes [20 minutes add to startDateTime]
+
+                // 3nd person, joining time => startDateTime = 2026-08-25T15:40:00.436Z => 3:00 PM
+                // serial number {(3) - 1} * 20 => 40 minutes [40 minutes add to startDateTime]
+
+                const joiningTime = addMinutes(
+                    appointment.schedule.startDateTime,
+                    (serialNumber - 1) * 20,
+                );
+
+                await tx.appointment.update({
+                    where: {
+                        id: executedPaymentResult.merchantInvoiceNumber,
+                    },
+                    data: {
+                        status: AppointmentStatus.CONFIRMED,
+                        joiningTime,
+                        serialNumber,
+                    },
+                });
+
+                const newAvailableSlots =
+                    appointment.schedule.availableSlots - 1;
+
+                await prisma.schedule.update({
+                    where: {
+                        id: appointment.schedule.id,
+                    },
+                    data: {
+                        availableSlots: newAvailableSlots,
+                    },
+                });
+
+                await tx.payment.update({
+                    where: {
+                        appointmentId:
+                            executedPaymentResult.merchantInvoiceNumber,
+                        bkashPaymentId: paymentId,
+                    },
+                    data: {
+                        status: PaymentStatus.PAID,
+                        bkashTrxId: executedPaymentResult.trxID,
+                        paidAt: executedPaymentResult.paymentExecuteTime,
+                        gatewayResponse: executedPaymentResult,
+                    },
+                });
+
+                //Create pdf file
+                const pdfDocument = new PDFDocument({ margin: 50 });
+
+                const pdfChunks: Buffer[] = [];
+
+                //Create listener
+                pdfDocument.on('data', (chunk: Buffer) => {
+                    pdfChunks.push(chunk);
+                });
+
+                const pdfReadyPromise = new Promise<Buffer>((resolve) => {
+                    pdfDocument.on('end', () => {
+                        resolve(Buffer.concat(pdfChunks));
+                    });
+                });
+
+                pdfDocument
+                    .fontSize(20)
+                    .text('SR Healthcare System', { align: 'center' });
+                pdfDocument
+                    .fontSize(14)
+                    .text('Appointment Invoice', { align: 'center' });
+                pdfDocument.moveDown(2);
+
+                pdfDocument
+                    .fontSize(12)
+                    .text(`Patient Name: ${appointment.patient?.name}`);
+                pdfDocument.text(
+                    `Patient Email: ${appointment.patient?.email}`,
+                );
+                pdfDocument.moveDown();
+
+                pdfDocument.text(`Doctor Name: ${appointment.doctor?.name}`);
+                pdfDocument.text(
+                    `Specialization: ${appointment.doctor?.specialization}`,
+                );
+                pdfDocument.moveDown();
+
+                pdfDocument.text(
+                    `Appointment Date: ${appointment.schedule.startDateTime.toDateString()}`,
+                );
+                pdfDocument.text(
+                    `Your Joining Time: ${joiningTime.toString()}`,
+                );
+                pdfDocument.text(`Your Serial Number: ${serialNumber}`);
+                pdfDocument.text(
+                    `Meeting Link: ${appointment.schedule.meetingLink}`,
+                );
+                pdfDocument.moveDown();
+
+                pdfDocument.text(
+                    `Amount Paid: ${executedPaymentResult.amount} BDT`,
+                );
+                pdfDocument.text(`Payment Method: bKash`);
+                pdfDocument.text(
+                    `Transaction Id: ${executedPaymentResult.trxID}`,
+                );
+                pdfDocument.text(
+                    `Paid At: ${executedPaymentResult.paymentExecuteTime}`,
+                );
+
+                pdfDocument.end();
+
+                const pdfBuffer = await pdfReadyPromise;
+
+                await transporter.sendMail({
+                    from: config.email_sender,
+                    to: appointment.patient.email,
+                    subject: 'Your Appointment Invoice - SR Healthcare System',
+                    text: 'Thank you for booking an appointment. Please find your invoice attached.',
+                    attachments: [
+                        {
+                            filename: 'invoice.pdf',
+                            content: pdfBuffer,
+                        },
+                    ],
+                });
+
+                return {
+                    redirectUrl: `${config.frontend_url}/dashboard/my-appointments?status=success`,
+                };
+            } else if (status === 'failure') {
+                await tx.payment.update({
+                    where: {
+                        bkashPaymentId: paymentId,
+                    },
+                    data: {
+                        status: PaymentStatus.FAILED,
+                        gatewayResponse: executedPaymentResult,
+                    },
+                });
+
+                return {
+                    executedPaymentResult,
+                    redirectUrl: `${config.frontend_url}/dashboard/my-appointments?status=failure`,
+                };
+            } else if (status === 'cancel') {
+                await tx.payment.update({
+                    where: {
+                        bkashPaymentId: paymentId,
+                    },
+                    data: {
+                        status: PaymentStatus.CANCELLED,
+                        gatewayResponse: executedPaymentResult,
+                    },
+                });
+
+                return {
+                    executedPaymentResult,
+                    redirectUrl: `${config.frontend_url}/dashboard/my-appointments?status=cancel`,
+                };
+            } else {
+                return {
+                    executedPaymentResult,
+                    redirectUrl: `${config.frontend_url}/dashboard/my-appointments?error=payment-failed`,
+                };
+            }
+        },
+        {
+            maxWait: 10000, // default: 2000
+            timeout: 30000, // default: 5000
+        },
+    );
 
     return transactionResult;
 };

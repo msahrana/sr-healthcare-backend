@@ -40,7 +40,10 @@ const registerPatientIntoDB = async (payload: IRegisterPatientPayload) => {
     });
 
     if (isUserExists) {
-        throw new AppError(httpStatus.CONFLICT, 'User with this email already exists');
+        throw new AppError(
+            httpStatus.CONFLICT,
+            'User with this email already exists',
+        );
     }
 
     const hashedPassword = await bcrypt.hash(password, 8);
@@ -314,7 +317,10 @@ const refreshTokenIntoDB = async (token: string) => {
     });
 
     if (!user || user.isDeleted || user.status !== UserStatus.ACTIVE) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'User is inactive or not found');
+        throw new AppError(
+            httpStatus.UNAUTHORIZED,
+            'User is inactive or not found',
+        );
     }
 
     const jwtPayload = {
@@ -434,18 +440,27 @@ const googleLoginIntoDB = async (payload: IGoogleLoginPayload) => {
         googleIdTokenPayload = ticket.getPayload();
     } catch (error) {
         console.log('Google ID Token Verification Failed', error);
-        throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid Or Expired Google Id Token');
+        throw new AppError(
+            httpStatus.UNAUTHORIZED,
+            'Invalid Or Expired Google Id Token',
+        );
     }
 
     if (!googleIdTokenPayload) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid Or Expired Google Id Token');
+        throw new AppError(
+            httpStatus.UNAUTHORIZED,
+            'Invalid Or Expired Google Id Token',
+        );
     }
 
     if (!googleIdTokenPayload.email) {
         throw new AppError(httpStatus.BAD_REQUEST, 'Google Email Not Found');
     }
     if (!googleIdTokenPayload.name) {
-        throw new AppError(httpStatus.BAD_REQUEST, 'Google Email User Name Not Found');
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            'Google Email User Name Not Found',
+        );
     }
 
     const ifPatientExistWithGoogleAuth = await prisma.user.findUnique({
@@ -469,7 +484,10 @@ const googleLoginIntoDB = async (payload: IGoogleLoginPayload) => {
 
         if (ifPatientExistWithCredentials) {
             if (!ifPatientExistWithCredentials.emailVerified) {
-                throw new AppError(httpStatus.BAD_REQUEST, 'Email Not Verified');
+                throw new AppError(
+                    httpStatus.BAD_REQUEST,
+                    'Email Not Verified',
+                );
             }
 
             if (ifPatientExistWithCredentials.status === UserStatus.BLOCKED) {
@@ -597,7 +615,10 @@ const forgotPasswordIntoDB = async (payload: IForgotPasswordPayload) => {
     }
 
     if (isUserExist.googleId && isUserExist.authProvider === 'GOOGLE') {
-        throw new AppError(httpStatus.BAD_REQUEST, 'User Has Account With Google!');
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            'User Has Account With Google!',
+        );
     }
 
     const otp = crypto.randomInt(100000, 1000000).toString();
@@ -662,7 +683,10 @@ const resetPasswordIntoDB = async (payload: IResetPasswordPayload) => {
     }
 
     if (isUserExist.googleId && isUserExist.authProvider === 'GOOGLE') {
-        throw new AppError(httpStatus.BAD_REQUEST, 'User Has Account With Google!');
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            'User Has Account With Google!',
+        );
     }
 
     const key = `forgot-password-otp:${isUserExist.email}`;
@@ -766,7 +790,10 @@ const uploadProfileImageIntoDB = async (buffer: Buffer, userId: string) => {
 
                         if (!result) {
                             return reject(
-                                new AppError(httpStatus.INTERNAL_SERVER_ERROR, 'No result returned from Cloudinary'),
+                                new AppError(
+                                    httpStatus.INTERNAL_SERVER_ERROR,
+                                    'No result returned from Cloudinary',
+                                ),
                             );
                         }
 

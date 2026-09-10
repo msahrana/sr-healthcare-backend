@@ -5,6 +5,7 @@ import { sendResponse } from '../../utils/sendResponse';
 import type { IRequestUser } from './auth.interface';
 import { AuthService } from './auth.service';
 import { AppError } from '../../utils/AppError';
+import config from '../../config';
 
 const registerPatient = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body;
@@ -44,15 +45,15 @@ const verifyPatientEmail = catchAsync(async (req: Request, res: Response) => {
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'none',
+        secure: config.node_env === 'development' ? false : true,
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
     });
 
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'none',
+        secure: config.node_env === 'development' ? false : true,
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
@@ -73,15 +74,15 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'none',
+        secure: config.node_env === 'development' ? false : true,
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
     });
 
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'none',
+        secure: config.node_env === 'development' ? false : true,
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
@@ -100,7 +101,10 @@ const getMe = catchAsync(async (req: Request, res: Response) => {
     const user = req.user as unknown as IRequestUser;
 
     if (!user) {
-        throw new AppError(httpStatus.BAD_REQUEST, 'User information is missing in the request');
+        throw new AppError(
+            httpStatus.BAD_REQUEST,
+            'User information is missing in the request',
+        );
     }
 
     const result = await AuthService.getMeIntoDB(user);
@@ -125,15 +129,15 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'none',
+        secure: config.node_env === 'development' ? false : true,
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
     });
-    
+
     res.cookie('refreshToken', newRefreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'none',
+        secure: config.node_env === 'development' ? false : true,
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
@@ -212,15 +216,15 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'none',
+        secure: config.node_env === 'development' ? false : true,
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
     });
 
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'none',
+        secure: config.node_env === 'development' ? false : true,
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
 
@@ -280,6 +284,29 @@ const uploadProfileImage = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+const logout = catchAsync(async (req: Request, res: Response) => {
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: config.node_env === 'production',
+        sameSite: 'lax',
+        path: '/',
+    });
+
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: config.node_env === 'production',
+        sameSite: 'lax',
+        path: '/',
+    });
+
+    sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'User Logged Successfully.',
+        data: null,
+    });
+});
+
 export const AuthController = {
     registerPatient,
     verifyPatientEmail,
@@ -294,4 +321,5 @@ export const AuthController = {
     forgotPassword,
     resetPassword,
     uploadProfileImage,
+    logout,
 };

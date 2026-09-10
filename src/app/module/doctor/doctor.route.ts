@@ -41,26 +41,20 @@ router.get(
 );
 
 router.patch(
-	"/update-my-profile",
-	auth(Role.DOCTOR),
-	validateRequest(UpdateDoctorProfileValidationZodSchema),
-	DoctorControllers.updateDoctorProfile,
+    '/update-my-profile',
+    auth(Role.DOCTOR),
+    validateRequest(UpdateDoctorProfileValidationZodSchema),
+    DoctorControllers.updateDoctorProfile,
 );
 
 // Public doctor-discovery routes (no auth) — meant for patients browsing before login.
 router.get(
-	"/public/available-today",
-	DoctorControllers.getAvailableDoctorByTodaysSchedule,
+    '/public/available-today',
+    DoctorControllers.getAvailableDoctorByTodaysSchedule,
 );
 
-router.get(
-	"/public/all-doctors",
-	DoctorControllers.getAllDoctorsListPublic,
-);
+router.get('/public/all-doctors', DoctorControllers.getAllDoctorsListPublic);
 
-router.get(
-	"/public/:doctorId",
-	DoctorControllers.getSingleDoctorPublicProfile,
-);
+router.get('/public/:doctorId', DoctorControllers.getSingleDoctorPublicProfile);
 
 export const DoctorRoutes = router;
