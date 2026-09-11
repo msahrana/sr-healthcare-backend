@@ -1,25 +1,14 @@
 import type { NextFunction, Request, Response } from 'express';
 import type { JwtPayload } from 'jsonwebtoken';
 import type { Role } from '../../generated/prisma/enums';
+
+import httpStatus from 'http-status';
+
 import config from '../config';
 import { prisma } from '../lib/prisma';
 import { catchAsync } from '../utils/catchAsync';
 import { jwtUtils } from '../utils/jwt';
 import { AppError } from '../utils/AppError';
-import httpStatus from 'http-status';
-
-// declare global {
-// 	namespace Express {
-// 		interface Request {
-// 			user?: {
-// 				email: string;
-// 				name: string;
-// 				id: string;
-// 				role: Role;
-// 			};
-// 		}
-// 	}
-// }
 
 export interface RequestUser {
     email: string;
@@ -36,16 +25,14 @@ declare global {
     }
 }
 
-// auth(Role.ADMIN, Role.USER, Role.Author)
-// auth() => ...requiredRoles => [Role.ADMIN, Role.USER, Role.AUTHOR]
 export const auth = (...requiredRoles: Role[]) => {
     return catchAsync(
         async (req: Request, res: Response, next: NextFunction) => {
-            const token = req.cookies.accessToken
-                ? req.cookies.accessToken
-                : req.headers.authorization?.startsWith('Bearer ')
-                  ? req.headers.authorization?.split(' ')[1]
-                  : req.headers.authorization;
+            const token =
+                req.cookies?.accessToken ||
+                (req.headers.authorization?.startsWith('Bearer ')
+                    ? req.headers.authorization.split(' ')[1]
+                    : req.headers.authorization);
 
             if (!token) {
                 throw new AppError(
@@ -66,9 +53,17 @@ export const auth = (...requiredRoles: Role[]) => {
                 );
             }
 
-            const { id, email, name, role } = verifiedToken.data as JwtPayload;
+            const { userId, email, name, role } =
+                verifiedToken.data as JwtPayload;
 
-            if (requiredRoles.length && !requiredRoles.includes(role)) {
+            if (!userId || !email || !name || !role) {
+                throw new AppError(
+                    httpStatus.UNAUTHORIZED,
+                    'Invalid authentication token.',
+                );
+            }
+
+            if (requiredRoles.length > 0 && !requiredRoles.includes(role)) {
                 throw new AppError(
                     httpStatus.FORBIDDEN,
                     "Forbidden. You don't have permission to access this resource.",
@@ -77,10 +72,7 @@ export const auth = (...requiredRoles: Role[]) => {
 
             const user = await prisma.user.findUnique({
                 where: {
-                    id,
-                    email,
-                    name,
-                    role,
+                    id: userId,
                 },
             });
 
@@ -98,11 +90,18 @@ export const auth = (...requiredRoles: Role[]) => {
                 );
             }
 
+            if (user.isDeleted || user.status === 'DELETED') {
+                throw new AppError(
+                    httpStatus.GONE,
+                    'User account has been deleted.',
+                );
+            }
+
             req.user = {
-                email,
-                name,
-                id,
-                role,
+                id: user.id,
+                email: user.email,
+                name: user.name,
+                role: user.role,
             };
 
             next();
