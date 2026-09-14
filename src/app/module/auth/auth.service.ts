@@ -197,7 +197,7 @@ const verifyPatientEmailIntoDB = async (payload: IVerifyEmailPayload) => {
     const { patient, ...user } = createdUser;
 
     const jwtPayload = {
-        userId: user.id,
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
