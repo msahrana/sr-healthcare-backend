@@ -1,11 +1,11 @@
-import type { Request, Response } from 'express';
+import type { CookieOptions, Request, Response } from 'express';
 import httpStatus from 'http-status';
+import config from '../../config';
+import { AppError } from '../../utils/AppError';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendResponse } from '../../utils/sendResponse';
 import type { IRequestUser } from './auth.interface';
 import { AuthService } from './auth.service';
-import { AppError } from '../../utils/AppError';
-import config from '../../config';
 
 const registerPatient = catchAsync(async (req: Request, res: Response) => {
     const payload = req.body;
@@ -285,24 +285,20 @@ const uploadProfileImage = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
-    res.clearCookie('accessToken', {
+    const cookieOptions: CookieOptions = {
         httpOnly: true,
-        secure: config.node_env === 'production',
-        sameSite: 'lax',
+        secure: config.node_env !== 'development',
+        sameSite: config.node_env === 'development' ? 'lax' : 'none',
         path: '/',
-    });
+    };
 
-    res.clearCookie('refreshToken', {
-        httpOnly: true,
-        secure: config.node_env === 'production',
-        sameSite: 'lax',
-        path: '/',
-    });
+    res.clearCookie('accessToken', cookieOptions);
+    res.clearCookie('refreshToken', cookieOptions);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'User Logged Successfully.',
+        message: 'Logged out successfully.',
         data: null,
     });
 });

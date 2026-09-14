@@ -53,6 +53,10 @@ const registerPatientIntoDB = async (payload: IRegisterPatientPayload) => {
     const otpKey = `patient-registration-otp:${email}`;
     const otpValue = crypto.randomInt(100000, 1000000).toString();
 
+    if (config.node_env === 'development') {
+        console.log(`[dev] ${email} : ${otpValue}`);
+    }
+
     await redisClient.set(otpKey, otpValue, {
         expiration: {
             type: 'EX',
@@ -565,7 +569,7 @@ const googleLoginIntoDB = async (payload: IGoogleLoginPayload) => {
     }
 
     const jwtPayload = {
-        userId: user.id,
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
