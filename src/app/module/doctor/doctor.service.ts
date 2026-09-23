@@ -25,6 +25,7 @@ import { AppError } from '../../utils/AppError';
 import httpStatus from 'http-status';
 import { DoctorWhereInput } from '../../../generated/prisma/models';
 import { addDays, startOfDay } from 'date-fns';
+import generateRandomPassword from '../../utils/randomPassword';
 
 const applyAsDoctorIntoDB = async (
     payload: IApplyAsDoctorPayload,
@@ -132,15 +133,15 @@ const applyAsDoctorIntoDB = async (
     // 5. Generate temporary password as a doctor
     // =========================================================
 
-    const randomDoctorPassword = Math.random().toString(36).slice(-8);
-    // const randomDoctorPassword = crypto
-    //     .randomBytes(6)
-    //     .toString('base64url')
-    //     .slice(0, 10);
-    const hashedPassword = await bcrypt.hash(
-        randomDoctorPassword,
-        Number(config.bcrypt_salt_rounds),
-    );
+    // const randomDoctorPassword = Math.random().toString(36).slice(-8);
+    // // const randomDoctorPassword = crypto
+    // //     .randomBytes(6)
+    // //     .toString('base64url')
+    // //     .slice(0, 10);
+    // const hashedPassword = await bcrypt.hash(
+    //     randomDoctorPassword,
+    //     Number(config.bcrypt_salt_rounds),
+    // );
 
     // =========================================================
     // 6. Create (User + Doctor) in DB
@@ -149,7 +150,7 @@ const applyAsDoctorIntoDB = async (
     const doctorApplication = await prisma.user.create({
         data: {
             ...payload.user,
-            password: hashedPassword,
+            // password: hashedPassword,
             role: Role.DOCTOR,
             needPasswordChange: true,
             doctor: {
@@ -182,6 +183,11 @@ const applyAsDoctorIntoDB = async (
 
     const otpKey = `doctor-application-otp:${payload.user.email}`;
     const otpValue = crypto.randomInt(100000, 1000000).toString();
+
+    if (config.node_env === 'development')
+        console.log(
+            `[dev] Doctor application OTP for ${payload.user.email}: ${otpValue}`,
+        );
 
     // =========================================================
     // 8. Store OTP in Redis
@@ -327,6 +333,25 @@ const approveDoctorIntoDB = async (
         );
     }
 
+    const isApproved = verificationStatus === DoctorVerificationStatus.APPROVED;
+
+    const randomDoctorPassword = isApproved
+        ? generateRandomPassword()
+        : undefined;
+
+    if (config.node_env === 'development' && randomDoctorPassword) {
+        console.log(
+            `[dev] Random Password plain text: ${randomDoctorPassword}`,
+        );
+    }
+
+    const hashedPassword = randomDoctorPassword
+        ? await bcrypt.hash(
+              randomDoctorPassword,
+              Number(config.bcrypt_salt_rounds),
+          )
+        : undefined;
+
     const updatedDoctor = await prisma.doctor.update({
         where: { id: doctorId },
         data: {
@@ -337,10 +362,11 @@ const approveDoctorIntoDB = async (
                     : null,
             reviewedBy: reviewer.id,
             reviewedAt: new Date(),
+            ...(hashedPassword
+                ? { user: { update: { password: hashedPassword } } }
+                : {}),
         },
     });
-
-    const isApproved = verificationStatus === DoctorVerificationStatus.APPROVED;
 
     const templatePath = path.join(
         process.cwd(),
@@ -354,6 +380,7 @@ const approveDoctorIntoDB = async (
     const templateData = {
         name: updatedDoctor.name,
         reason: updatedDoctor.rejectionReason,
+        password: isApproved ? randomDoctorPassword : undefined,
     };
 
     const html = await ejs.renderFile(templatePath, templateData);

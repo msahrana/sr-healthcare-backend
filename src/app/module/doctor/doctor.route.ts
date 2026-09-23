@@ -4,7 +4,10 @@ import { Router } from 'express';
 import { auth } from '../../middleware/checkAuth';
 import { Role } from '../../../generated/prisma/enums';
 import { validateRequest } from '../../middleware/validateRequest';
-import { UpdateDoctorProfileValidationZodSchema } from './doctor.validation';
+import {
+    UpdateDoctorProfileValidationZodSchema,
+    verifyDoctorEmailSchema,
+} from './doctor.validation';
 
 const router = Router();
 
@@ -25,13 +28,14 @@ router.post(
 
 router.post(
     '/apply-as-doctor/verify-email',
+    validateRequest(verifyDoctorEmailSchema),
     DoctorControllers.verifyDoctorEmail,
 );
 
 router.post(
     '/approve-doctor',
     auth(Role.ADMIN, Role.SUPER_ADMIN),
-    DoctorControllers.verifyDoctorEmail,
+    DoctorControllers.approveDoctor,
 );
 
 router.get(

@@ -25,17 +25,13 @@ const applyAsDoctor = catchAsync(async (req: Request, res: Response) => {
 
     const payload = zodValidationResult.data;
 
-    const result = await DoctorServices.applyAsDoctorIntoDB(
-        payload,
-        resume,
-        additionalFiles,
-    );
+    await DoctorServices.applyAsDoctorIntoDB(payload, resume, additionalFiles);
 
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Applied As Doctor Successful!!',
-        data: result,
+        message: 'Verification OTP Sent & Verification Your Account...!',
+        data: null,
     });
 });
 

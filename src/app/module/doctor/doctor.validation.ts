@@ -73,3 +73,12 @@ export const UpdateDoctorProfileValidationZodSchema = z.object({
         .min(5, 'Contact number is invalid')
         .optional(),
 });
+
+export const verifyDoctorEmailSchema = z.object({
+    email: z.string().trim().email('Please provide a valid email address.'),
+
+    otp: z
+        .string()
+        .trim()
+        .regex(/^\d{6}$/, 'OTP must be exactly 6 digits.'),
+});
