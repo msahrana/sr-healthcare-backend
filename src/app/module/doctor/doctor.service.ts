@@ -552,8 +552,8 @@ const getAvailableDoctorByTodaysScheduleIntoDB = async (query: IQuery) => {
                     startDateTime: {
                         gte: startOfToday,
                         lt: startOfTomorrow,
-                        gt: now,
                     },
+                    endDateTime: { gt: now },
                 },
             },
         },
@@ -612,10 +612,10 @@ const getAvailableDoctorByTodaysScheduleIntoDB = async (query: IQuery) => {
                     startDateTime: {
                         gte: startOfToday,
                         lt: startOfTomorrow,
-                        gt: now,
                     },
+                    endDateTime: { gt: now },
                 },
-                orderBy: { [sortBy]: sortOrder },
+                orderBy: { startDateTime: 'asc' },
                 select: {
                     id: true,
                     startDateTime: true,
