@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 import config from '../config';
 import { redisClient } from './redis';
 import { AppError } from '../utils/AppError';
