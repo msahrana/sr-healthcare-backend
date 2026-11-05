@@ -13,3 +13,8 @@ export interface ICancelAppointmentPayload {
 export interface IUpdateAppointmentStatusPayload {
     status: 'ONGOING' | 'COMPLETED';
 }
+
+export interface IBkashCallbackQuery {
+    paymentID?: string;
+    status?: 'success' | 'failure' | 'cancel';
+}

@@ -24,7 +24,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/register",
+                            "raw": "http://localhost:5000/api/v1/auth/register",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -48,7 +48,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/login",
+                            "raw": "http://localhost:5000/api/v1/auth/login",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -70,7 +70,7 @@
                             "raw": " {\r\n    \"email\": \"yusuf@example.com\",\r\n    \"password\": \"Yusuf123\"\r\n }"
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/all-users",
+                            "raw": "http://localhost:5000/api/v1/auth/all-users",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -92,7 +92,7 @@
                             "raw": " {\r\n    \"email\": \"yusuf@example.com\",\r\n    \"password\": \"Yusuf123\"\r\n }"
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/user/4ed3d50c-3440-463e-a914-60c4aae81f15",
+                            "raw": "http://localhost:5000/api/v1/auth/user/4ed3d50c-3440-463e-a914-60c4aae81f15",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -120,7 +120,7 @@
                             "raw": " {\r\n    \"email\": \"yusuf@example.com\",\r\n    \"password\": \"Yusuf123\"\r\n }"
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/me",
+                            "raw": "http://localhost:5000/api/v1/auth/me",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -144,7 +144,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/my-profile",
+                            "raw": "http://localhost:5000/api/v1/auth/my-profile",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -168,7 +168,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/change-password",
+                            "raw": "http://localhost:5000/api/v1/auth/change-password",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -192,7 +192,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/google",
+                            "raw": "http://localhost:5000/api/v1/auth/google",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -216,7 +216,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/zod",
+                            "raw": "http://localhost:5000/zod",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -240,7 +240,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/forgot-password",
+                            "raw": "http://localhost:5000/api/v1/auth/forgot-password",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -264,7 +264,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/reset-password",
+                            "raw": "http://localhost:5000/api/v1/auth/reset-password",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -288,7 +288,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/verify-email",
+                            "raw": "http://localhost:5000/api/v1/auth/verify-email",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -314,7 +314,7 @@
                             ]
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/profile-image",
+                            "raw": "http://localhost:5000/api/v1/auth/profile-image",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -366,7 +366,7 @@
                             ]
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/doctor/apply-as-doctor",
+                            "raw": "http://localhost:5000/api/v1/doctor/apply-as-doctor",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -390,7 +390,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/login",
+                            "raw": "http://localhost:5000/api/v1/auth/login",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -405,7 +405,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/doctor/public/available-today",
+                            "raw": "http://localhost:5000/api/v1/doctor/public/available-today",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -426,7 +426,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/doctor/public/all-doctors",
+                            "raw": "http://localhost:5000/api/v1/doctor/public/all-doctors",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -461,7 +461,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/schedule/create-schedule",
+                            "raw": "http://localhost:5000/api/v1/schedule/create-schedule",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -488,7 +488,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/schedule/my-schedules",
+                            "raw": "http://localhost:5000/api/v1/schedule/my-schedules",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -515,7 +515,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/schedule/6606bd10-6485-43e6-9cdd-ed5e76bf3f61",
+                            "raw": "http://localhost:5000/api/v1/schedule/6606bd10-6485-43e6-9cdd-ed5e76bf3f61",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -547,7 +547,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/schedule/todays-schedule?doctorId=1dd90fc1-6581-4570-ace0-c6f9f27b8a0c",
+                            "raw": "http://localhost:5000/api/v1/schedule/todays-schedule?doctorId=1dd90fc1-6581-4570-ace0-c6f9f27b8a0c",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -573,7 +573,7 @@
                         "method": "PATCH",
                         "header": [],
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/schedule/publish-schedule/51da3df7-9d4e-4e2a-b6fd-f2728fc39177",
+                            "raw": "http://localhost:5000/api/v1/schedule/publish-schedule/51da3df7-9d4e-4e2a-b6fd-f2728fc39177",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -608,7 +608,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/appointment/book-appointment",
+                            "raw": "http://localhost:5000/api/v1/appointment/book-appointment",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -637,7 +637,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/appointment/pay-appointment",
+                            "raw": "http://localhost:5000/api/v1/appointment/pay-appointment",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -666,7 +666,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/appointment/cancel-appointment",
+                            "raw": "http://localhost:5000/api/v1/appointment/cancel-appointment",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -700,7 +700,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/prescription/create-prescription",
+                            "raw": "http://localhost:5000/api/v1/prescription/create-prescription",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -720,7 +720,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/prescription/cbc76c62-d3b7-46a7-9311-e5f9bd50f835",
+                            "raw": "http://localhost:5000/api/v1/prescription/cbc76c62-d3b7-46a7-9311-e5f9bd50f835",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -754,7 +754,7 @@
                             }
                         },
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/auth/login",
+                            "raw": "http://localhost:5000/api/v1/auth/login",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
@@ -769,7 +769,7 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                            "raw": "https://sr-healthcare-backend.vercel.app/api/v1/doctor/all-doctors",
+                            "raw": "http://localhost:5000/api/v1/doctor/all-doctors",
                             "protocol": "http",
                             "host": ["localhost"],
                             "port": "5000",
