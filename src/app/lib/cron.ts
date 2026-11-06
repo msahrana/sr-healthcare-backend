@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import { prisma } from './prisma';
 import { DoctorVerificationStatus, Role } from '../../generated/prisma/enums';
+import { reindexAllDoctors } from '../module/chat/chat.indexer';
 
 export const deleteUnverifiedDoctors = async () => {
     cron.schedule('*/60 * * * *', async () => {
@@ -65,5 +66,20 @@ export const deleteRejectedDoctors = async () => {
         }
 
         console.log('Rejected Doctor Delete cron schedule (every 6 hours)!');
+    });
+};
+
+export const reindexDoctorEmbeddings = async () => {
+    cron.schedule('0 3 * * *', async () => {
+        try {
+            const count = await reindexAllDoctors();
+
+            console.log(`Cron: re-index ${count} doctors for the chatbot`);
+        } catch (error: unknown) {
+            console.error(
+                'Cron: failed to re-index doctors for the chatbot',
+                error,
+            );
+        }
     });
 };

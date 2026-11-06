@@ -5,15 +5,6 @@ import { DoctorVerificationStatus } from '../../../generated/prisma/enums';
 
 const INDEX_BATCH_SIZE = 20;
 
-const indexableDoctorSelect = {
-    id: true,
-    name: true,
-    specialization: true,
-    qualifications: true,
-    experienceYears: true,
-    bio: true,
-} as const;
-
 type TIndexableDoctor = {
     id: string;
     name: string;
@@ -22,6 +13,15 @@ type TIndexableDoctor = {
     experienceYears: number;
     bio: string | null;
 };
+
+const indexableDoctorSelect = {
+    id: true,
+    name: true,
+    specialization: true,
+    qualifications: true,
+    experienceYears: true,
+    bio: true,
+} as const;
 
 export const buildDoctorDocument = (doctor: TIndexableDoctor) =>
     new Document({
@@ -70,7 +70,7 @@ export const reindexAllDoctors = async () => {
         },
     });
 
-    await prisma.doctorEmbeddig.deleteMany({
+    await prisma.doctorEmbedding.deleteMany({
         where: { id: { notIn: doctors.map((doctor) => doctor.id) } },
     });
 

@@ -45,6 +45,7 @@ app.use('/api/v1/schedule', ScheduleRoutes);
 app.use('/api/v1/payment', PaymentRoutes);
 app.use('/api/v1/prescription', PrescriptionRoutes);
 app.use('/api/v1/analytics', AnalyticsRoutes);
+//RAG implemented chat router
 app.use('/api/v1/chat', ChatRoutes);
 
 // Testing routes

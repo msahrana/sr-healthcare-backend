@@ -9,7 +9,7 @@ const DOCTOR_PASSWORD = 'Doctor@1234';
 const doctors = [
     {
         name: 'Dr. Rahim Ahmed',
-        email: 'shafayat.ph+dr1@gmail.com',
+        email: 'msah.sr.healthcare+dr1@gmail.com',
         address: 'House 12, Road 5, Dhanmondi, Dhaka',
         specialization: 'Cardiology',
         licenseNumber: 'BMDC-A-10231',
@@ -21,7 +21,7 @@ const doctors = [
     },
     {
         name: 'Dr. Nusrat Jahan',
-        email: 'shafayat.ph+dr2@gmail.com',
+        email: 'msah.sr.healthcare+dr2@gmail.com',
         address: 'Sector 7, Uttara, Dhaka',
         specialization: 'Gynecology',
         licenseNumber: 'BMDC-A-10232',
@@ -33,7 +33,7 @@ const doctors = [
     },
     {
         name: 'Dr. Tanvir Hossain',
-        email: 'shafayat.ph+dr3@gmail.com',
+        email: 'msah.sr.healthcare+dr3@gmail.com',
         address: 'Agrabad C/A, Chattogram',
         specialization: 'Neurology',
         licenseNumber: 'BMDC-A-10233',
@@ -45,7 +45,7 @@ const doctors = [
     },
     {
         name: 'Dr. Farhana Akter',
-        email: 'shafayat.ph+dr4@gmail.com',
+        email: 'msah.sr.healthcare+dr4@gmail.com',
         address: 'Gulshan 2, Dhaka',
         specialization: 'Dermatology',
         licenseNumber: 'BMDC-A-10234',
@@ -57,7 +57,7 @@ const doctors = [
     },
     {
         name: 'Dr. Kamal Uddin',
-        email: 'shafayat.ph+dr5@gmail.com',
+        email: 'msah.sr.healthcare+dr5@gmail.com',
         address: 'Zindabazar, Sylhet',
         specialization: 'Orthopedics',
         licenseNumber: 'BMDC-A-10235',
@@ -69,7 +69,7 @@ const doctors = [
     },
     {
         name: 'Dr. Sabrina Rahman',
-        email: 'shafayat.ph+dr6@gmail.com',
+        email: 'msah.sr.healthcare+dr6@gmail.com',
         address: 'Mirpur 10, Dhaka',
         specialization: 'Pediatrics',
         licenseNumber: 'BMDC-A-10236',
@@ -81,7 +81,7 @@ const doctors = [
     },
     {
         name: 'Dr. Mahmudul Hasan',
-        email: 'shafayat.ph+dr7@gmail.com',
+        email: 'msah.sr.healthcare+dr7@gmail.com',
         address: 'Shaheb Bazar, Rajshahi',
         specialization: 'Gastroenterology',
         licenseNumber: 'BMDC-A-10237',
@@ -93,7 +93,7 @@ const doctors = [
     },
     {
         name: 'Dr. Ayesha Siddika',
-        email: 'shafayat.ph+dr8@gmail.com',
+        email: 'msah.sr.healthcare+dr8@gmail.com',
         address: 'Banani, Dhaka',
         specialization: 'Psychiatry',
         licenseNumber: 'BMDC-A-10238',
@@ -105,7 +105,7 @@ const doctors = [
     },
     {
         name: 'Dr. Imran Chowdhury',
-        email: 'shafayat.ph+dr9@gmail.com',
+        email: 'msah.sr.healthcare+dr9@gmail.com',
         address: 'Sonadanga, Khulna',
         specialization: 'ENT',
         licenseNumber: 'BMDC-A-10239',
@@ -117,7 +117,7 @@ const doctors = [
     },
     {
         name: 'Dr. Shirin Sultana',
-        email: 'shafayat.ph+dr10@gmail.com',
+        email: 'msah.sr.healthcare+dr10@gmail.com',
         address: 'Mohammadpur, Dhaka',
         specialization: 'Endocrinology',
         licenseNumber: 'BMDC-A-10240',
@@ -129,7 +129,7 @@ const doctors = [
     },
     {
         name: 'Dr. Abdullah Al Mamun',
-        email: 'shafayat.ph+dr11@gmail.com',
+        email: 'msah.sr.healthcare+dr11@gmail.com',
         address: 'Shantinagar, Dhaka',
         specialization: 'Nephrology',
         licenseNumber: 'BMDC-A-10241',
@@ -141,7 +141,7 @@ const doctors = [
     },
     {
         name: 'Dr. Rubina Yasmin',
-        email: 'shafayat.ph+dr12@gmail.com',
+        email: 'msah.sr.healthcare+dr12@gmail.com',
         address: 'Panchlaish, Chattogram',
         specialization: 'Pulmonology',
         licenseNumber: 'BMDC-A-10242',
@@ -153,7 +153,7 @@ const doctors = [
     },
     {
         name: 'Dr. Mizanur Rahman',
-        email: 'shafayat.ph+dr13@gmail.com',
+        email: 'msah.sr.healthcare+dr13@gmail.com',
         address: 'Mohakhali, Dhaka',
         specialization: 'Oncology',
         licenseNumber: 'BMDC-A-10243',
@@ -165,7 +165,7 @@ const doctors = [
     },
     {
         name: 'Dr. Hasan Mahmud',
-        email: 'shafayat.ph+dr14@gmail.com',
+        email: 'msah.sr.healthcare+dr14@gmail.com',
         address: 'Lalbagh, Dhaka',
         specialization: 'Urology',
         licenseNumber: 'BMDC-A-10244',
@@ -177,7 +177,7 @@ const doctors = [
     },
     {
         name: 'Dr. Tahmina Begum',
-        email: 'shafayat.ph+dr15@gmail.com',
+        email: 'msah.sr.healthcare+dr15@gmail.com',
         address: 'Shyamoli, Dhaka',
         specialization: 'Ophthalmology',
         licenseNumber: 'BMDC-A-10245',
@@ -189,7 +189,7 @@ const doctors = [
     },
     {
         name: 'Dr. Sohel Rana',
-        email: 'shafayat.ph+dr16@gmail.com',
+        email: 'msah.sr.healthcare+dr16@gmail.com',
         address: 'Kazir Dewri, Chattogram',
         specialization: 'Rheumatology',
         licenseNumber: 'BMDC-A-10246',
@@ -201,7 +201,7 @@ const doctors = [
     },
     {
         name: 'Dr. Nasrin Akhter',
-        email: 'shafayat.ph+dr17@gmail.com',
+        email: 'msah.sr.healthcare+dr17@gmail.com',
         address: 'Shahbag, Dhaka',
         specialization: 'Hematology',
         licenseNumber: 'BMDC-A-10247',
@@ -213,7 +213,7 @@ const doctors = [
     },
     {
         name: 'Dr. Jahid Hasan',
-        email: 'shafayat.ph+dr18@gmail.com',
+        email: 'msah.sr.healthcare+dr18@gmail.com',
         address: 'Rupnagar, Mirpur, Dhaka',
         specialization: 'General Surgery',
         licenseNumber: 'BMDC-A-10248',
@@ -225,7 +225,7 @@ const doctors = [
     },
     {
         name: 'Dr. Arifur Rahman',
-        email: 'shafayat.ph+dr19@gmail.com',
+        email: 'msah.sr.healthcare+dr19@gmail.com',
         address: 'Agargaon, Dhaka',
         specialization: 'Neurosurgery',
         licenseNumber: 'BMDC-A-10249',
@@ -237,7 +237,7 @@ const doctors = [
     },
     {
         name: 'Dr. Lamia Islam',
-        email: 'shafayat.ph+dr20@gmail.com',
+        email: 'msah.sr.healthcare+dr20@gmail.com',
         address: 'Baridhara, Dhaka',
         specialization: 'Plastic Surgery',
         licenseNumber: 'BMDC-A-10250',
@@ -249,7 +249,7 @@ const doctors = [
     },
     {
         name: 'Dr. Rezaul Karim',
-        email: 'shafayat.ph+dr21@gmail.com',
+        email: 'msah.sr.healthcare+dr21@gmail.com',
         address: 'Elephant Road, Dhaka',
         specialization: 'Dentistry',
         licenseNumber: 'BMDC-D-10251',
@@ -261,7 +261,7 @@ const doctors = [
     },
     {
         name: 'Dr. Mehnaz Chowdhury',
-        email: 'shafayat.ph+dr22@gmail.com',
+        email: 'msah.sr.healthcare+dr22@gmail.com',
         address: 'Khulshi, Chattogram',
         specialization: 'Physical Medicine & Rehabilitation',
         licenseNumber: 'BMDC-A-10252',
@@ -273,7 +273,7 @@ const doctors = [
     },
     {
         name: 'Dr. Shahidul Islam',
-        email: 'shafayat.ph+dr23@gmail.com',
+        email: 'msah.sr.healthcare+dr23@gmail.com',
         address: 'Kazipara, Mirpur, Dhaka',
         specialization: 'Internal Medicine',
         licenseNumber: 'BMDC-A-10253',
@@ -285,7 +285,7 @@ const doctors = [
     },
     {
         name: 'Dr. Sharmin Nahar',
-        email: 'shafayat.ph+dr24@gmail.com',
+        email: 'msah.sr.healthcare+dr24@gmail.com',
         address: 'Tongi, Gazipur',
         specialization: 'Family Medicine',
         licenseNumber: 'BMDC-A-10254',
@@ -297,7 +297,7 @@ const doctors = [
     },
     {
         name: 'Dr. Fazlul Haque',
-        email: 'shafayat.ph+dr25@gmail.com',
+        email: 'msah.sr.healthcare+dr25@gmail.com',
         address: 'Mohakhali DOHS, Dhaka',
         specialization: 'Infectious Disease',
         licenseNumber: 'BMDC-A-10255',
@@ -309,7 +309,7 @@ const doctors = [
     },
     {
         name: 'Dr. Kazi Nazrul Hasan',
-        email: 'shafayat.ph+dr26@gmail.com',
+        email: 'msah.sr.healthcare+dr26@gmail.com',
         address: 'Sher-e-Bangla Nagar, Dhaka',
         specialization: 'Cardiac Surgery',
         licenseNumber: 'BMDC-A-10256',
@@ -321,7 +321,7 @@ const doctors = [
     },
     {
         name: 'Dr. Moushumi Sarkar',
-        email: 'shafayat.ph+dr27@gmail.com',
+        email: 'msah.sr.healthcare+dr27@gmail.com',
         address: 'Shishu Hospital Road, Sher-e-Bangla Nagar, Dhaka',
         specialization: 'Neonatology',
         licenseNumber: 'BMDC-A-10257',
@@ -333,7 +333,7 @@ const doctors = [
     },
     {
         name: 'Dr. Rakibul Hasan',
-        email: 'shafayat.ph+dr28@gmail.com',
+        email: 'msah.sr.healthcare+dr28@gmail.com',
         address: 'Moghbazar, Dhaka',
         specialization: 'Pediatric Surgery',
         licenseNumber: 'BMDC-A-10258',
@@ -345,7 +345,7 @@ const doctors = [
     },
     {
         name: 'Dr. Tasnim Ferdous',
-        email: 'shafayat.ph+dr29@gmail.com',
+        email: 'msah.sr.healthcare+dr29@gmail.com',
         address: 'Niketan, Gulshan 1, Dhaka',
         specialization: 'Allergy & Immunology',
         licenseNumber: 'BMDC-A-10259',
@@ -357,7 +357,7 @@ const doctors = [
     },
     {
         name: 'Dr. Golam Mostafa',
-        email: 'shafayat.ph+dr30@gmail.com',
+        email: 'msah.sr.healthcare+dr30@gmail.com',
         address: 'Kotwali, Barishal',
         specialization: 'Geriatrics',
         licenseNumber: 'BMDC-A-10260',
@@ -369,7 +369,7 @@ const doctors = [
     },
     {
         name: 'Dr. Samiul Alam',
-        email: 'shafayat.ph+dr31@gmail.com',
+        email: 'msah.sr.healthcare+dr31@gmail.com',
         address: 'Bashundhara R/A, Dhaka',
         specialization: 'Sports Medicine',
         licenseNumber: 'BMDC-A-10261',
@@ -381,7 +381,7 @@ const doctors = [
     },
     {
         name: 'Dr. Rehana Parvin',
-        email: 'shafayat.ph+dr32@gmail.com',
+        email: 'msah.sr.healthcare+dr32@gmail.com',
         address: 'Malibagh, Dhaka',
         specialization: 'Hepatology',
         licenseNumber: 'BMDC-A-10262',
@@ -393,7 +393,7 @@ const doctors = [
     },
     {
         name: 'Dr. Nazmul Huda',
-        email: 'shafayat.ph+dr33@gmail.com',
+        email: 'msah.sr.healthcare+dr33@gmail.com',
         address: 'Laxmipur, Rajshahi',
         specialization: 'Pain Medicine',
         licenseNumber: 'BMDC-A-10263',
@@ -406,7 +406,7 @@ const doctors = [
     },
     {
         name: 'Dr. Fahmida Hoque',
-        email: 'shafayat.ph+dr34@gmail.com',
+        email: 'msah.sr.healthcare+dr34@gmail.com',
         address: 'Dhanmondi 27, Dhaka',
         specialization: 'Nutrition & Dietetics',
         licenseNumber: 'BMDC-A-10264',
@@ -418,7 +418,7 @@ const doctors = [
     },
     {
         name: 'Dr. Anisur Rahman',
-        email: 'shafayat.ph+dr35@gmail.com',
+        email: 'msah.sr.healthcare+dr35@gmail.com',
         address: 'Ambarkhana, Sylhet',
         specialization: 'Cardiology',
         licenseNumber: 'BMDC-A-10265',
@@ -430,7 +430,7 @@ const doctors = [
     },
     {
         name: 'Dr. Jannatul Ferdous',
-        email: 'shafayat.ph+dr36@gmail.com',
+        email: 'msah.sr.healthcare+dr36@gmail.com',
         address: 'Boyra, Khulna',
         specialization: 'Pediatrics',
         licenseNumber: 'BMDC-A-10266',
@@ -442,7 +442,7 @@ const doctors = [
     },
     {
         name: 'Dr. Sadia Afrin',
-        email: 'shafayat.ph+dr37@gmail.com',
+        email: 'msah.sr.healthcare+dr37@gmail.com',
         address: 'Nasirabad, Chattogram',
         specialization: 'Gynecology',
         licenseNumber: 'BMDC-A-10267',
@@ -454,7 +454,7 @@ const doctors = [
     },
     {
         name: 'Dr. Mostafizur Rahman',
-        email: 'shafayat.ph+dr38@gmail.com',
+        email: 'msah.sr.healthcare+dr38@gmail.com',
         address: 'Paltan, Dhaka',
         specialization: 'Psychiatry',
         licenseNumber: 'BMDC-A-10268',
@@ -466,7 +466,7 @@ const doctors = [
     },
     {
         name: 'Dr. Ishrat Jahan',
-        email: 'shafayat.ph+dr39@gmail.com',
+        email: 'msah.sr.healthcare+dr39@gmail.com',
         address: 'Wari, Dhaka',
         specialization: 'Dermatology',
         licenseNumber: 'BMDC-A-10269',
@@ -478,7 +478,7 @@ const doctors = [
     },
     {
         name: 'Dr. Shafiqul Alam',
-        email: 'shafayat.ph+dr40@gmail.com',
+        email: 'msah.sr.healthcare+dr40@gmail.com',
         address: 'Kandirpar, Cumilla',
         specialization: 'Orthopedics',
         licenseNumber: 'BMDC-A-10270',
@@ -995,7 +995,7 @@ const extraDoctors = specialtyProfiles.flatMap((profile, s) =>
 
         return {
             name: `Dr. ${firstNames[i % firstNames.length]} ${lastNames[Math.floor(i / firstNames.length) % lastNames.length]}`,
-            email: `shafayat.ph+dr${serial}@gmail.com`,
+            email: `msah.sr.healthcare+dr${serial}@gmail.com`,
             address: `House ${(i % 40) + 1}, Road ${(i % 12) + 1}, ${locations[i % locations.length]}`,
             specialization: profile.specialization,
             licenseNumber: `${licensePrefix}-${10230 + serial}`,

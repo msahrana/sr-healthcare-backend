@@ -25,7 +25,7 @@ const openRouterChatModel = new ChatOpenAI({
         baseURL: OPENROUTER_BASE_URL,
         defaultHeaders: {
             'HTTP-Referer': config.frontend_url ?? 'http://localhost:3000',
-            'X-Title': 'PH Healtcare',
+            'X-Title': 'SR HealthCare',
         },
     },
 });

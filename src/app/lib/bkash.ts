@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noExplicitAny: <explanation> */
 import config from '../config';
 import { redisClient } from './redis';
 import { AppError } from '../utils/AppError';
@@ -18,6 +17,7 @@ export const getBKashIdToken = async () => {
         // (1) bkash id token remaining time is less than equal 10 minutes or bkash id is expired.
         // (2) bkash refresh token must exist.
         // (3) bkash refresh token remaining time is more than 10 minutes.
+
         if (
             (bkashIdTokenTTL <= 600 || !bkashIdToken) &&
             bkashRefreshToken &&

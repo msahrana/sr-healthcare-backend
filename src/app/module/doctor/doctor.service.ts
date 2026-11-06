@@ -26,6 +26,7 @@ import httpStatus from 'http-status';
 import { DoctorWhereInput } from '../../../generated/prisma/models';
 import { addDays, startOfDay } from 'date-fns';
 import generateRandomPassword from '../../utils/randomPassword';
+import { upsertDoctorEmbedding } from '../chat/chat.indexer';
 
 const applyAsDoctorIntoDB = async (
     payload: IApplyAsDoctorPayload,
@@ -368,6 +369,8 @@ const approveDoctorIntoDB = async (
         },
     });
 
+    syncDoctorEmbedding(updatedDoctor.id); // RAG
+
     const templatePath = path.join(
         process.cwd(),
         `src/app/templates/${
@@ -518,6 +521,8 @@ const updateDoctorProfileIntoDB = async (
         where: { id: existingDoctor.id },
         data: payload,
     });
+
+    syncDoctorEmbedding(updatedDoctor.id); // RAG
 
     return updatedDoctor;
 };
@@ -748,6 +753,12 @@ const getSingleDoctorPublicProfileIntoDB = async (doctorId: string) => {
     }
 
     return doctor;
+};
+
+const syncDoctorEmbedding = (doctorId: string) => {
+    upsertDoctorEmbedding(doctorId).catch((error) =>
+        console.error('Chat: failed to index doctor', error),
+    );
 };
 
 export const DoctorServices = {
